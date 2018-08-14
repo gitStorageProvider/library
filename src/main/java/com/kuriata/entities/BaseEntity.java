@@ -35,4 +35,11 @@ public class BaseEntity implements Serializable, Cloneable{
     public int hashCode() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "BaseEntity{" +
+                "id=" + id +
+                '}';
+    }
 }

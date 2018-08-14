@@ -13,13 +13,13 @@ import com.kuriata.exceptions.DAOException;
 
 public class MySQLDAOFactory implements IDAOFactory {
     @Override
-    public IAuthorDAO getAuthorsDAO(WrappedConnection wrappedConnection) {
-        return new AuthorDAO(wrappedConnection);
+    public IAuthorDAO getAuthorsDAO() {
+        return new AuthorDAO();
     }
 
     @Override
-    public IBookDAO getBooksDAO(WrappedConnection wrappedConnection) throws DAOException {
-        return null;
+    public IBookDAO getBooksDAO() throws DAOException {
+        return new BookDAO();
     }
 
     @Override

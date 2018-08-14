@@ -1,6 +1,11 @@
 package com.kuriata.controller;
 
 import com.kuriata.dao.connection.WrappedConnection;
+import com.kuriata.dao.daofactory.AbstractDAOFactory;
+import com.kuriata.dao.idao.IAuthorDAO;
+import com.kuriata.dao.mysqldao.AuthorDAO;
+import com.kuriata.entities.Author;
+import com.kuriata.exceptions.DAOException;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -16,6 +21,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 @WebServlet("/controller")
 public class ControllerServlet extends HttpServlet {
@@ -31,49 +37,65 @@ public class ControllerServlet extends HttpServlet {
     }
 
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        resp.getWriter().printf("Controller servlet process().");
-        Context ctx = null;
-        Connection connection = null;
-        Statement stmt = null;
-        ResultSet rs = null;
+////        resp.getWriter().printf("Controller servlet process().");
+//        Context ctx = null;
+//        Connection connection = null;
+//        Statement stmt = null;
+//        ResultSet rs = null;
+//
+//        try {
+//            ctx = new InitialContext();
+//            DataSource ds = (DataSource) ctx.lookup("java:/comp/env/jdbc/libraryDB");
+//            connection = ds.getConnection();
+//
+//
+//            System.out.println("connection created");
+//            WrappedConnection wrappedConnection = new WrappedConnection(connection);
+//            System.out.println("wrapped connection created");
+//            stmt = wrappedConnection.createStatement();
+//            System.out.println("statement created");
+//            rs = stmt.executeQuery("SELECT * FROM authors");
+//            System.out.println("querry executed");
+//            StringBuilder sb = new StringBuilder();
+//            while (rs.next()) {
+//                //Retrieve by column name
+//                String full_name = rs.getString("full_name");
+//                String country = rs.getString("country");
+//
+//                //Display values
+//
+//                sb.append("full_name: " + full_name);
+//                sb.append(", country: " + country);
+//                System.out.println(sb);
+//            }
+//            resp.getWriter().println("SQL query worked properly. Time in milis is: " + System.currentTimeMillis());
+//
+////            IAuthorDAO authorDAO = AbstractDAOFactory.getDAOFactory().getAuthorsDAO(wrappedConnection);
+////            List<Author> authorList = authorDAO.findAll();
+////            resp.getWriter().printf("List size of uthors is: "+authorList.size());
+////            ResultSet rs = connection.createStatement().executeQuery("SELECT * FROM books;");
+////            resp.getWriter().printf("List size of books is: "+rs.getFetchSize());
+//
+//        } catch (NamingException e) {
+//            // Handle error that it's not configured in JNDI.
+//            throw new IllegalStateException("jdbc/db is missing in JNDI!", e);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
         try {
-            ctx = new InitialContext();
-            DataSource ds = (DataSource) ctx.lookup("java:/comp/env/jdbc/libraryDB");
-            connection = ds.getConnection();
-
-
-            System.out.println("connection created");
-            WrappedConnection wrappedConnection = new WrappedConnection(connection);
-            System.out.println("wrapped connection created");
-            stmt = wrappedConnection.createStatement();
-            System.out.println("statement created");
-            rs = stmt.executeQuery("SELECT * FROM authors");
-            System.out.println("querry executed");
+            AuthorDAO authorDAO = (AuthorDAO) AbstractDAOFactory.getDAOFactory().getAuthorsDAO();
+            List<Author> authorList = authorDAO.findAll();
+            resp.getWriter().println("List size of uthors is: "+authorList.size());
             StringBuilder sb = new StringBuilder();
-            while (rs.next()) {
-                //Retrieve by column name
-                String full_name = rs.getString("full_name");
-                String country = rs.getString("country");
-
-                //Display values
-
-                sb.append("full_name: " + full_name);
-                sb.append(", country: " + country);
-                System.out.println(sb);
+            for(Author one: authorList){
+                sb.append(one.getId()+ ", "+one.getCountry()+", "+one.getFullName()+";\n");
             }
-            resp.getWriter().println("SQL query worked properly. Time in milis is: " + System.currentTimeMillis());
-
-//            IAuthorDAO authorDAO = AbstractDAOFactory.getDAOFactory().getAuthorsDAO(wrappedConnection);
-//            List<Author> authorList = authorDAO.findAll();
-//            resp.getWriter().printf("List size of uthors is: "+authorList.size());
-//            ResultSet rs = connection.createStatement().executeQuery("SELECT * FROM books;");
-//            resp.getWriter().printf("List size of books is: "+rs.getFetchSize());
-
-        } catch (NamingException e) {
-            // Handle error that it's not configured in JNDI.
-            throw new IllegalStateException("jdbc/db is missing in JNDI!", e);
-        } catch (SQLException e) {
+            resp.getWriter().println(sb);
+            resp.getWriter().println("\n find author by id = 1: \n");
+            Author foundByIDAuthor = authorDAO.findById(1);
+            resp.getWriter().println(foundByIDAuthor.getId()+ ", "+foundByIDAuthor.getCountry()+", "+foundByIDAuthor.getFullName()+";\n");
+        } catch (DAOException e) {
             e.printStackTrace();
         }
     }

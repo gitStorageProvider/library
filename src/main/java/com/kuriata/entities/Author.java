@@ -51,8 +51,9 @@ public class Author extends BaseEntity {
     @Override
     public String toString() {
         return "Author{" +
-                "fullName='" + fullName + '\'' +
-                ", country='" + country + '\'' +
+                "id='" + getId() + '\'' +
+                ", \tfullName='" + fullName + '\'' +
+                ", \tcountry='" + country + '\'' +
                 '}';
     }
 }

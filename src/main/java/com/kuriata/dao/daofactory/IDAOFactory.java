@@ -8,9 +8,9 @@ import com.kuriata.dao.idao.IUserDAO;
 import com.kuriata.exceptions.DAOException;
 
 public interface IDAOFactory {
-    IAuthorDAO getAuthorsDAO(WrappedConnection wrappedConnection) throws DAOException;
+    IAuthorDAO getAuthorsDAO() throws DAOException;
 
-    IBookDAO getBooksDAO(WrappedConnection wrappedConnection) throws DAOException;
+    IBookDAO getBooksDAO() throws DAOException;
 
     IShelfDAO getShelfsDAO(WrappedConnection wrappedConnection) throws DAOException;
 

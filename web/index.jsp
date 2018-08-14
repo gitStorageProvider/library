@@ -17,18 +17,35 @@
   <%@ page import="javax.naming.InitialContext" %>
   <%@ page import="javax.naming.NamingException" %>
   <%@ page import="javax.sql.DataSource" %>
+  <%@ page import="com.kuriata.dao.idao.IAuthorDAO" %>
+  <%@ page import="com.kuriata.dao.daofactory.AbstractDAOFactory" %>
+  <%@ page import="com.kuriata.entities.Author" %>
+  <%@ page import="java.util.List" %>
   <%
     try {
       Context initCtx = new InitialContext();
       DataSource ctx = (DataSource) initCtx.lookup("java:comp/env/jdbc/libraryDB");
       Object o = ctx.toString();
   %>
-  <%=o%><br>
+    <%=o%><br>
   <%
     }
     catch (NamingException ex) {
-      System.err.println(ex);
+      System.out.println(ex);
     }
   %>
+
+  <%
+    IAuthorDAO authorDAO = AbstractDAOFactory.getDAOFactory().getAuthorsDAO();
+    StringBuilder sb = new StringBuilder();
+    List<Author> authorList = authorDAO.findAll();
+    sb.append("List size of uthors is: "+authorList.size()+"\n");
+    for(Author one: authorList){
+      sb.append(one.getId()+ ", "+one.getCountry()+", "+one.getFullName()+";\n");
+    }
+  %>
+  <%=sb%>
+
+
   </body>
 </html>

@@ -17,8 +17,13 @@ public abstract class AbstractConnectionFactory {
                     throw new RuntimeException("Connection type= " + currentType + " not supported");
             }
         }catch (Throwable t){
+            t.printStackTrace();
             throw new DAOException("Exception in class AbstractConnectionFactory.", t );
         }
         return connectionFactory;
+    }
+
+    public static void setConnectionType(SupportedConnectionTypes connectionType){
+        currentType = connectionType;
     }
 }

@@ -71,4 +71,15 @@ public class Book extends BaseEntity {
         result = 31 * result + (keyWords != null ? keyWords.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id='" + getId() + '\'' +
+                ", \tshortTitle='" + shortTitle + '\'' +
+                ", \tfullTitle='" + fullTitle + '\'' +
+                ", \tdescription='" + description + '\'' +
+                ", \tkeyWords='" + keyWords + '\'' +
+                "} ";
+    }
 }
