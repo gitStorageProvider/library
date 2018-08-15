@@ -1,4 +1,6 @@
 package com.kuriata.dao.idao;
 
-public interface IShelfDAO extends IDAO {
+import com.kuriata.entities.Shelf;
+
+public interface IShelfDAO extends IDAO<Shelf> {
 }

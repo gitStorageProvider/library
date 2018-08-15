@@ -2,8 +2,8 @@ package com.kuriata.dao.mysqldao;
 
 import com.kuriata.dao.connection.AbstractConnectionFactory;
 import com.kuriata.dao.connection.WrappedConnection;
-import com.kuriata.dao.idao.IAuthorDAO;
-import com.kuriata.entities.Author;
+import com.kuriata.dao.idao.IBookAuthorDAO;
+import com.kuriata.entities.BookAuthor;
 import com.kuriata.exceptions.DAOException;
 
 import java.sql.PreparedStatement;
@@ -13,25 +13,25 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuthorDAO implements IAuthorDAO {
-    public static final String AUTHORS_TABLE_NAME = "authors";
-    public static final String SQL_SELECT_ALL_AUTHORS = "SELECT * FROM " + AUTHORS_TABLE_NAME;
-    public static final String SQL_SELECT_AUTHOR_BY_ID = "SELECT * FROM " + AUTHORS_TABLE_NAME + " WHERE id = ?";
-    public static final String SQL_INSERT_AUTHOR = "INSERT INTO " + AUTHORS_TABLE_NAME + "(full_name, country) VALUES (?, ?)";
-    public static final String SQL_UPDATE_AUTHOR = "UPDATE " + AUTHORS_TABLE_NAME + " SET full_name = ?, country = ? WHERE id = ?";
-    public static final String SQL_DELETE_AUTHOR_BY_ID = "DELETE FROM " + AUTHORS_TABLE_NAME + " WHERE id = ?";
+public class BookAuthorDAO implements IBookAuthorDAO {
+    public static final String BOOK_AUTHOR_TABLE_NAME = "book_author";
+    public static final String SQL_SELECT_ALL_RECORDS = "SELECT * FROM " + BOOK_AUTHOR_TABLE_NAME;
+    public static final String SQL_SELECT_RECORD_BY_ID = "SELECT * FROM " + BOOK_AUTHOR_TABLE_NAME + " WHERE id = ?";
+    public static final String SQL_INSERT_RECORD = "INSERT INTO " + BOOK_AUTHOR_TABLE_NAME + "(book_id, author_id) VALUES (?, ?)";
+    public static final String SQL_UPDATE_RECORD = "UPDATE " + BOOK_AUTHOR_TABLE_NAME + " SET book_id = ?, author_id = ? WHERE id = ?";
+    public static final String SQL_DELETE_RECORD_BY_ID = "DELETE FROM " + BOOK_AUTHOR_TABLE_NAME + " WHERE id = ?";
 
     @Override
-    public List<Author> findAll() throws DAOException {
-        List<Author> result = new ArrayList<>();
+    public List<BookAuthor> findAll() throws DAOException {
+        List<BookAuthor> result = new ArrayList<>();
 
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             Statement statement = wrappedConnection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_AUTHORS);
+            ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_RECORDS);
             while (resultSet.next()) {
-                result.add(new Author(resultSet.getInt("id"),
-                        resultSet.getString("full_name"),
-                        resultSet.getString("country")));
+                result.add(new BookAuthor(resultSet.getInt("id"),
+                        resultSet.getInt("book_id"),
+                        resultSet.getInt("author_id")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -40,16 +40,16 @@ public class AuthorDAO implements IAuthorDAO {
     }
 
     @Override
-    public Author findById(int id) throws DAOException {
-        Author result = null;
+    public BookAuthor findById(int id) throws DAOException {
+        BookAuthor result = null;
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_SELECT_AUTHOR_BY_ID);
+            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_SELECT_RECORD_BY_ID);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                result = new Author(resultSet.getInt("id"),
-                        resultSet.getString("full_name"),
-                        resultSet.getString("country"));
+                result = new BookAuthor(resultSet.getInt("id"),
+                        resultSet.getInt("book_id"),
+                        resultSet.getInt("author_id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -57,14 +57,14 @@ public class AuthorDAO implements IAuthorDAO {
         return result;
     }
 
-    @Override
-    public int insert(Author author) throws DAOException {
+
+    public int insert(BookAuthor bookAuthor) throws DAOException {
         int result = 0;
 
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_AUTHOR);
-            preparedStatement.setString(1, author.getFullName());
-            preparedStatement.setString(2, author.getCountry());
+            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_RECORD);
+            preparedStatement.setInt(1, bookAuthor.getBookId());
+            preparedStatement.setInt(2, bookAuthor.getAuthorId());
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next())
@@ -76,13 +76,13 @@ public class AuthorDAO implements IAuthorDAO {
         return result;
     }
 
-    @Override
-    public boolean update(Author author) throws DAOException {
+
+    public boolean update(BookAuthor bookAuthor) throws DAOException {
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_AUTHOR);
-            preparedStatement.setString(1, author.getFullName());
-            preparedStatement.setString(2, author.getCountry());
-            preparedStatement.setInt(3, author.getId());
+            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_RECORD);
+            preparedStatement.setInt(1, bookAuthor.getBookId());
+            preparedStatement.setInt(2, bookAuthor.getAuthorId());
+            preparedStatement.setInt(3, bookAuthor.getId());
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -94,7 +94,7 @@ public class AuthorDAO implements IAuthorDAO {
     @Override
     public boolean deleteById(int id) throws DAOException {
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_AUTHOR_BY_ID);
+            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_RECORD_BY_ID);
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
             return true;
@@ -103,5 +103,4 @@ public class AuthorDAO implements IAuthorDAO {
             return false;
         }
     }
-
 }
