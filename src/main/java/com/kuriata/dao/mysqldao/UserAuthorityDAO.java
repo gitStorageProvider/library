@@ -2,9 +2,9 @@ package com.kuriata.dao.mysqldao;
 
 import com.kuriata.dao.connection.AbstractConnectionFactory;
 import com.kuriata.dao.connection.WrappedConnection;
-import com.kuriata.dao.idao.IUserBookDAO;
+import com.kuriata.dao.idao.IUserAuthorityDAO;
 import com.kuriata.entities.Author;
-import com.kuriata.entities.UserBook;
+import com.kuriata.entities.UserAuthority;
 import com.kuriata.exceptions.DAOException;
 
 import java.sql.PreparedStatement;
@@ -14,26 +14,25 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserBookDAO implements IUserBookDAO {
-    public static final String USER_BOOK_TABLE_NAME = "user_book";
-    public static final String SQL_SELECT_ALL_RECORDS = "SELECT * FROM " + USER_BOOK_TABLE_NAME;
-    public static final String SQL_SELECT_RECORD_BY_ID = "SELECT * FROM " + USER_BOOK_TABLE_NAME + " WHERE id = ?";
-    public static final String SQL_INSERT_RECORD = "INSERT INTO " + USER_BOOK_TABLE_NAME + "(user_id, book_id, date) VALUES (?, ?, ?)";
-    public static final String SQL_UPDATE_RECORD = "UPDATE " + USER_BOOK_TABLE_NAME + " SET user_id = ?, book_id = ?, date = ? WHERE id = ?";
-    public static final String SQL_DELETE_RECORD_BY_ID = "DELETE FROM " + USER_BOOK_TABLE_NAME + " WHERE id = ?";
+public class UserAuthorityDAO implements IUserAuthorityDAO {
+    public static final String USER_AUTHORITY_TABLE_NAME = "authors";
+    public static final String SQL_SELECT_ALL_RECORDS = "SELECT * FROM " + USER_AUTHORITY_TABLE_NAME;
+    public static final String SQL_SELECT_RECORD_BY_ID = "SELECT * FROM " + USER_AUTHORITY_TABLE_NAME + " WHERE id = ?";
+    public static final String SQL_INSERT_RECORD = "INSERT INTO " + USER_AUTHORITY_TABLE_NAME + "(user_id, authority_id) VALUES (?, ?)";
+    public static final String SQL_UPDATE_RECORD = "UPDATE " + USER_AUTHORITY_TABLE_NAME + " SET user_id = ?, authority_id = ? WHERE id = ?";
+    public static final String SQL_DELETE_RECORD_BY_ID = "DELETE FROM " + USER_AUTHORITY_TABLE_NAME + " WHERE id = ?";
 
     @Override
-    public List<UserBook> findAll() throws DAOException {
-        List<UserBook> result = new ArrayList<>();
+    public List<UserAuthority> findAll() throws DAOException {
+        List<UserAuthority> result = new ArrayList<>();
 
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             Statement statement = wrappedConnection.createStatement();
             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_RECORDS);
             while (resultSet.next()) {
-                result.add(new UserBook(resultSet.getInt("id"),
+                result.add(new UserAuthority(resultSet.getInt("id"),
                         resultSet.getInt("user_id"),
-                        resultSet.getInt("book_id"),
-                        resultSet.getDate("date")));
+                        resultSet.getInt("authority_id")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,17 +41,16 @@ public class UserBookDAO implements IUserBookDAO {
     }
 
     @Override
-    public UserBook findById(int id) throws DAOException {
-        UserBook result = null;
+    public UserAuthority findById(int id) throws DAOException {
+        UserAuthority result = null;
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_SELECT_RECORD_BY_ID);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                result = new UserBook(resultSet.getInt("id"),
+                result = new UserAuthority(resultSet.getInt("id"),
                         resultSet.getInt("user_id"),
-                        resultSet.getInt("book_id"),
-                        resultSet.getDate("date"));
+                        resultSet.getInt("authority_id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -61,15 +59,13 @@ public class UserBookDAO implements IUserBookDAO {
     }
 
     @Override
-    public int insert(UserBook entity) throws DAOException {
+    public int insert(UserAuthority entity) throws DAOException {
         int result = 0;
 
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_RECORD);
             preparedStatement.setInt(1, entity.getUserId());
-            preparedStatement.setInt(2, entity.getBookId());
-            //ToDo: check is converting below correct, because stackOverflow recommends to use java.util.time
-            preparedStatement.setDate(3, (java.sql.Date) entity.getDate());
+            preparedStatement.setInt(2,entity.getAuthorityId());
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next())
@@ -82,13 +78,12 @@ public class UserBookDAO implements IUserBookDAO {
     }
 
     @Override
-    public boolean update(UserBook entity) throws DAOException {
+    public boolean update(UserAuthority entity) throws DAOException {
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_RECORD);
             preparedStatement.setInt(1, entity.getUserId());
-            preparedStatement.setInt(2, entity.getBookId());
-            //ToDo: check is converting below correct, because stackOverflow recommends to use java.util.time
-            preparedStatement.setDate(3, (java.sql.Date) entity.getDate());
+            preparedStatement.setInt(2, entity.getAuthorityId());
+            preparedStatement.setInt(3, entity.getId());
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {

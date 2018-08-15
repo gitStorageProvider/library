@@ -8,10 +8,12 @@ import com.kuriata.services.iservices.IUserService;
 
 import java.util.List;
 
-public class UserService implements IUserService {
+//ToDo: class must implement IUserService
+public class UserService {
     private IUserDAO userDAO;
 
-    @Override
+    //ToDo: uncomment annotation in next row
+//    @Override
     public User login(String userLogin, String userPassword) throws ServiceException {
         try {
             User user = userDAO.findByLogin(userLogin);
@@ -25,44 +27,44 @@ public class UserService implements IUserService {
     }
 
     //ToDo: implement method properly
-    @Override
-    public boolean registerUser(User user) {
-        return false;
-    }
+//    @Override
+//    public boolean registerUser(User user) {
+//        return false;
+//    }
 
     //ToDo: implement method properly
-    @Override
-    public boolean enableAdminPrivilegies() {
-        return false;
-    }
+//    @Override
+//    public boolean enableAdminPrivilegies() {
+//        return false;
+//    }
 
     //ToDo: implement method properly
-    @Override
-    public List<User> findAll() {
-        return null;
-    }
+//    @Override
+//    public List<User> findAll() {
+//        return null;
+//    }
 
     //ToDo: implement method properly
-    @Override
-    public User findByID(int id) {
-        return null;
-    }
+//    @Override
+//    public User findByID(int id) {
+//        return null;
+//    }
 
     //ToDo: implement method properly
-    @Override
-    public boolean update(User user) {
-        return false;
-    }
+//    @Override
+//    public boolean update(User user) {
+//        return false;
+//    }
 
     //ToDo: implement method properly
-    @Override
-    public boolean deleteByID(int id) {
-        return false;
-    }
+//    @Override
+//    public boolean deleteByID(int id) {
+//        return false;
+//    }
 
     //ToDo: implement method properly
-    @Override
-    public boolean isLoginAlreadyExist(String login) {
-        return false;
-    }
+//    @Override
+//    public boolean isLoginAlreadyExist(String login) {
+//        return false;
+//    }
 }

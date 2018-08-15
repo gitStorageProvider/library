@@ -2,9 +2,8 @@ package com.kuriata.dao.mysqldao;
 
 import com.kuriata.dao.connection.AbstractConnectionFactory;
 import com.kuriata.dao.connection.WrappedConnection;
-import com.kuriata.dao.idao.IUserBookDAO;
-import com.kuriata.entities.Author;
-import com.kuriata.entities.UserBook;
+import com.kuriata.dao.idao.IAuthorityDAO;
+import com.kuriata.entities.Authority;
 import com.kuriata.exceptions.DAOException;
 
 import java.sql.PreparedStatement;
@@ -14,26 +13,26 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserBookDAO implements IUserBookDAO {
-    public static final String USER_BOOK_TABLE_NAME = "user_book";
-    public static final String SQL_SELECT_ALL_RECORDS = "SELECT * FROM " + USER_BOOK_TABLE_NAME;
-    public static final String SQL_SELECT_RECORD_BY_ID = "SELECT * FROM " + USER_BOOK_TABLE_NAME + " WHERE id = ?";
-    public static final String SQL_INSERT_RECORD = "INSERT INTO " + USER_BOOK_TABLE_NAME + "(user_id, book_id, date) VALUES (?, ?, ?)";
-    public static final String SQL_UPDATE_RECORD = "UPDATE " + USER_BOOK_TABLE_NAME + " SET user_id = ?, book_id = ?, date = ? WHERE id = ?";
-    public static final String SQL_DELETE_RECORD_BY_ID = "DELETE FROM " + USER_BOOK_TABLE_NAME + " WHERE id = ?";
+public class AuthorityDAO implements IAuthorityDAO {
+    public static final String AUTHORITY_TABLE_NAME = "authorities";
+    public static final String SQL_SELECT_ALL_RECORDS = "SELECT * FROM " + AUTHORITY_TABLE_NAME;
+    public static final String SQL_SELECT_RECORD_BY_ID = "SELECT * FROM " + AUTHORITY_TABLE_NAME + " WHERE id = ?";
+    public static final String SQL_INSERT_RECORD = "INSERT INTO " + AUTHORITY_TABLE_NAME + "(authority_name, reader_flag, admin_flag) VALUES (?, ?, ?)";
+    public static final String SQL_UPDATE_RECORD = "UPDATE " + AUTHORITY_TABLE_NAME + " SET authority_name = ?, reader_flag = ?, admin_flag = ? WHERE id = ?";
+    public static final String SQL_DELETE_RECORD_BY_ID = "DELETE FROM " + AUTHORITY_TABLE_NAME + " WHERE id = ?";
 
     @Override
-    public List<UserBook> findAll() throws DAOException {
-        List<UserBook> result = new ArrayList<>();
+    public List<Authority> findAll() throws DAOException {
+        List<Authority> result = new ArrayList<>();
 
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             Statement statement = wrappedConnection.createStatement();
             ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_RECORDS);
             while (resultSet.next()) {
-                result.add(new UserBook(resultSet.getInt("id"),
-                        resultSet.getInt("user_id"),
-                        resultSet.getInt("book_id"),
-                        resultSet.getDate("date")));
+                result.add(new Authority(resultSet.getInt("id"),
+                        resultSet.getString("authority_name"),
+                        resultSet.getBoolean("reader_flag"),
+                        resultSet.getBoolean("admin_flag")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,17 +41,17 @@ public class UserBookDAO implements IUserBookDAO {
     }
 
     @Override
-    public UserBook findById(int id) throws DAOException {
-        UserBook result = null;
+    public Authority findById(int id) throws DAOException {
+        Authority result = null;
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_SELECT_RECORD_BY_ID);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                result = new UserBook(resultSet.getInt("id"),
-                        resultSet.getInt("user_id"),
-                        resultSet.getInt("book_id"),
-                        resultSet.getDate("date"));
+                result = new Authority(resultSet.getInt("id"),
+                        resultSet.getString("authority_name"),
+                        resultSet.getBoolean("reader_flag"),
+                        resultSet.getBoolean("admin_flag"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -61,15 +60,14 @@ public class UserBookDAO implements IUserBookDAO {
     }
 
     @Override
-    public int insert(UserBook entity) throws DAOException {
+    public int insert(Authority entity) throws DAOException {
         int result = 0;
 
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_RECORD);
-            preparedStatement.setInt(1, entity.getUserId());
-            preparedStatement.setInt(2, entity.getBookId());
-            //ToDo: check is converting below correct, because stackOverflow recommends to use java.util.time
-            preparedStatement.setDate(3, (java.sql.Date) entity.getDate());
+            preparedStatement.setString(1, entity.getAuthorityName());
+            preparedStatement.setBoolean(2, entity.isReader());
+            preparedStatement.setBoolean(3, entity.isAdmin());
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next())
@@ -82,13 +80,13 @@ public class UserBookDAO implements IUserBookDAO {
     }
 
     @Override
-    public boolean update(UserBook entity) throws DAOException {
+    public boolean update(Authority entity) throws DAOException {
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_RECORD);
-            preparedStatement.setInt(1, entity.getUserId());
-            preparedStatement.setInt(2, entity.getBookId());
-            //ToDo: check is converting below correct, because stackOverflow recommends to use java.util.time
-            preparedStatement.setDate(3, (java.sql.Date) entity.getDate());
+            preparedStatement.setString(1, entity.getAuthorityName());
+            preparedStatement.setBoolean(2, entity.isReader());
+            preparedStatement.setBoolean(3, entity.isAdmin());
+            preparedStatement.setInt(4, entity.getId());
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {

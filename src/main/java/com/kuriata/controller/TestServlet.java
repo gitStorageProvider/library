@@ -35,7 +35,7 @@ public class TestServlet extends HttpServlet {
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
 //            testAuthorsDAO(resp);
-//            testBooksDAO(resp);
+            testBooksDAO(resp);
             testUserServices(resp);
         } catch (DAOException e) {
             e.printStackTrace();
@@ -127,7 +127,8 @@ public class TestServlet extends HttpServlet {
     }
 
     private void testUserServices(HttpServletResponse resp) {
-        IUserService userService = new UserService();
+//        IUserService userService = new UserService();
+        UserService userService = new UserService();
         User result = null;
         try {
             result = userService.login("root", "root");
