@@ -21,6 +21,8 @@ public class UserBookDAO implements IUserBookDAO {
     public static final String SQL_INSERT_RECORD = "INSERT INTO " + USER_BOOK_TABLE_NAME + "(user_id, book_id, date) VALUES (?, ?, ?)";
     public static final String SQL_UPDATE_RECORD = "UPDATE " + USER_BOOK_TABLE_NAME + " SET user_id = ?, book_id = ?, date = ? WHERE id = ?";
     public static final String SQL_DELETE_RECORD_BY_ID = "DELETE FROM " + USER_BOOK_TABLE_NAME + " WHERE id = ?";
+    public static final String SQL_SELECT_RECORDS_BY_USER_ID = "SELECT * FROM " + USER_BOOK_TABLE_NAME + " WHERE user_id = ?";
+
 
     @Override
     public List<UserBook> findAll() throws DAOException {
@@ -33,7 +35,7 @@ public class UserBookDAO implements IUserBookDAO {
                 result.add(new UserBook(resultSet.getInt("id"),
                         resultSet.getInt("user_id"),
                         resultSet.getInt("book_id"),
-                        resultSet.getDate("date")));
+                        new java.util.Date(resultSet.getTimestamp("date").getTime())));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -52,7 +54,7 @@ public class UserBookDAO implements IUserBookDAO {
                 result = new UserBook(resultSet.getInt("id"),
                         resultSet.getInt("user_id"),
                         resultSet.getInt("book_id"),
-                        resultSet.getDate("date"));
+                        new java.util.Date(resultSet.getTimestamp("date").getTime()));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -69,6 +71,7 @@ public class UserBookDAO implements IUserBookDAO {
             preparedStatement.setInt(1, entity.getUserId());
             preparedStatement.setInt(2, entity.getBookId());
             //ToDo: check is converting below correct, because stackOverflow recommends to use java.util.time
+            preparedStatement.setTimestamp(1, new java.sql.Timestamp(entity.getDate().getTime()));
             preparedStatement.setDate(3, (java.sql.Date) entity.getDate());
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
@@ -108,5 +111,25 @@ public class UserBookDAO implements IUserBookDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+
+    @Override
+    public List<UserBook> findAllByUserId(int userId) throws DAOException {
+        List<UserBook> result = new ArrayList<>();
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
+            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_SELECT_RECORDS_BY_USER_ID);
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                result.add( new UserBook(resultSet.getInt("id"),
+                        resultSet.getInt("user_id"),
+                        resultSet.getInt("book_id"),
+                        new java.util.Date(resultSet.getTimestamp("date").getTime())));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

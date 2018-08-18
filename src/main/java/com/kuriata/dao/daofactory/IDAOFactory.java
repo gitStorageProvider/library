@@ -1,10 +1,7 @@
 package com.kuriata.dao.daofactory;
 
 import com.kuriata.dao.connection.WrappedConnection;
-import com.kuriata.dao.idao.IAuthorDAO;
-import com.kuriata.dao.idao.IBookDAO;
-import com.kuriata.dao.idao.IShelfDAO;
-import com.kuriata.dao.idao.IUserDAO;
+import com.kuriata.dao.idao.*;
 import com.kuriata.exceptions.DAOException;
 
 public interface IDAOFactory {
@@ -15,5 +12,9 @@ public interface IDAOFactory {
     IShelfDAO getShelfsDAO(WrappedConnection wrappedConnection) throws DAOException;
 
     IUserDAO getUsersDAO(WrappedConnection wrappedConnection) throws DAOException;
+
+    IShelfBookDAO getShelfBookDAO() throws DAOException;
+
+    IUserBookDAO getUserBookDao() throws DAOException;
 
 }

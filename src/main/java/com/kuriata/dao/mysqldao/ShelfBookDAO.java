@@ -2,9 +2,7 @@ package com.kuriata.dao.mysqldao;
 
 import com.kuriata.dao.connection.AbstractConnectionFactory;
 import com.kuriata.dao.connection.WrappedConnection;
-import com.kuriata.dao.idao.IDAO;
 import com.kuriata.dao.idao.IShelfBookDAO;
-import com.kuriata.entities.Author;
 import com.kuriata.entities.ShelfBook;
 import com.kuriata.exceptions.DAOException;
 
@@ -18,6 +16,7 @@ import java.util.List;
 public class ShelfBookDAO implements IShelfBookDAO {
     public static final String SHELF_BOOK_TABLE_NAME = "shelf_book";
     public static final String SQL_SELECT_ALL_RECORDS = "SELECT * FROM " + SHELF_BOOK_TABLE_NAME;
+    public static final String SQL_SELECT_ALL_ID_OF_AVAILABLE_BOOKS = "SELECT book_id FROM " + SHELF_BOOK_TABLE_NAME + " WHERE quantity > 0";
     public static final String SQL_SELECT_RECORD_BY_ID = "SELECT * FROM " + SHELF_BOOK_TABLE_NAME + " WHERE id = ?";
     public static final String SQL_INSERT_RECORD = "INSERT INTO " + SHELF_BOOK_TABLE_NAME + "(shelf_id, book_id, quantity) VALUES (?, ?, ?)";
     public static final String SQL_UPDATE_RECORD = "UPDATE " + SHELF_BOOK_TABLE_NAME + " SET shelf_id = ?, book_id = ?, quantity = ? WHERE id = ?";
@@ -109,5 +108,21 @@ public class ShelfBookDAO implements IShelfBookDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public List<Integer> findAvailableBooksId() throws DAOException {
+        List<Integer> result = new ArrayList<>();
+
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
+            Statement statement = wrappedConnection.createStatement();
+            ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_ID_OF_AVAILABLE_BOOKS);
+            while (resultSet.next()) {
+                result.add(new Integer(resultSet.getInt("book_id")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

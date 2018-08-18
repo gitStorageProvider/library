@@ -6,10 +6,11 @@ import com.kuriata.dao.mysqldao.BookDAO;
 import com.kuriata.entities.Author;
 import com.kuriata.entities.Book;
 import com.kuriata.entities.User;
+import com.kuriata.entities.UserBook;
 import com.kuriata.exceptions.DAOException;
-import com.kuriata.exceptions.ServiceException;
+import com.kuriata.services.impl.BookService;
 import com.kuriata.services.impl.UserService;
-import com.kuriata.services.iservices.IUserService;
+import com.kuriata.services.iservices.IBookService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,11 +34,58 @@ public class TestServlet extends HttpServlet {
     }
 
     private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
+//        try {
 //            testAuthorsDAO(resp);
-            testBooksDAO(resp);
-            testUserServices(resp);
-        } catch (DAOException e) {
+//            testBooksDAO(resp);
+//            testUserServices(resp);
+//            testBooksService(resp);
+            testBookService_available_and_taken(resp);
+
+//        } catch (DAOException | ServiceException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    private void testBookService_available_and_taken(HttpServletResponse resp) {
+        try {
+            IBookService bookService = new BookService(
+                    AbstractDAOFactory.getDAOFactory().getBooksDAO(),
+                    AbstractDAOFactory.getDAOFactory().getShelfBookDAO(),
+                    AbstractDAOFactory.getDAOFactory().getUserBookDao());
+            List<Book> bookList = bookService.getAllAvailableBooks();
+            resp.getWriter().println("\n\n\nAvailable books:\n");
+            for (Book one : bookList) {
+                resp.getWriter().println(one + ";\n");
+            }
+
+            List<UserBook> bookList2 = bookService.getAllTakenBooks();
+            resp.getWriter().println("\n\n\nTaken books:\n");
+            for (UserBook one : bookList2) {
+                resp.getWriter().println(one + ";\n");
+            }
+
+            List<UserBook> bookList3 = bookService.getAllBooksTakenByUser(1);
+            resp.getWriter().println("\n\n\nTaken books by user with id = 1:\n");
+            for (UserBook one : bookList3) {
+                resp.getWriter().println(one + ";\n");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void testBooksService(HttpServletResponse resp) {
+        try {
+            IBookService bookService = new BookService(
+                    AbstractDAOFactory.getDAOFactory().getBooksDAO(),
+                    AbstractDAOFactory.getDAOFactory().getShelfBookDAO(),
+                    AbstractDAOFactory.getDAOFactory().getUserBookDao());
+            List<Book> bookList = bookService.getAllBooks();
+            for (Book one : bookList) {
+                resp.getWriter().println(one + ";\n");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

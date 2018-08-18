@@ -10,6 +10,7 @@ import java.util.List;
 
 //ToDo: class must implement IUserService
 public class UserService {
+    //ToDo: make userDAO initialization in constructor
     private IUserDAO userDAO;
 
     //ToDo: uncomment annotation in next row

@@ -1,14 +1,8 @@
 package com.kuriata.dao.daofactory;
 
 import com.kuriata.dao.connection.WrappedConnection;
-import com.kuriata.dao.idao.IAuthorDAO;
-import com.kuriata.dao.idao.IBookDAO;
-import com.kuriata.dao.idao.IShelfDAO;
-import com.kuriata.dao.idao.IUserDAO;
-import com.kuriata.dao.mysqldao.AuthorDAO;
-import com.kuriata.dao.mysqldao.BookDAO;
-import com.kuriata.dao.mysqldao.ShelfDAO;
-import com.kuriata.dao.mysqldao.UserDAO;
+import com.kuriata.dao.idao.*;
+import com.kuriata.dao.mysqldao.*;
 import com.kuriata.exceptions.DAOException;
 
 public class MySQLDAOFactory implements IDAOFactory {
@@ -24,12 +18,21 @@ public class MySQLDAOFactory implements IDAOFactory {
 
     @Override
     public IShelfDAO getShelfsDAO(WrappedConnection wrappedConnection) throws DAOException {
-        return null;
+        return new ShelfDAO();
     }
 
     @Override
     public IUserDAO getUsersDAO(WrappedConnection wrappedConnection) {
-        return null;
+        return new UserDAO();
     }
 
+    @Override
+    public IShelfBookDAO getShelfBookDAO() throws DAOException {
+        return new ShelfBookDAO();
+    }
+
+    @Override
+    public IUserBookDAO getUserBookDao() throws DAOException {
+        return new UserBookDAO();
+    }
 }
