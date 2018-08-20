@@ -115,8 +115,8 @@ public class UserDAO implements IUserDAO {
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
 
     @Override
@@ -138,6 +138,23 @@ public class UserDAO implements IUserDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return result;
+    }
+
+    @Override
+    public boolean loginNotRegistered(String userLogin) throws DAOException {
+        boolean result = false;
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
+            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_FIND_BY_LOGIN);
+            preparedStatement.setString(1, userLogin);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()) {
+                return result;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        result = true;
         return result;
     }
 }

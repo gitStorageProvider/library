@@ -4,5 +4,6 @@ import com.kuriata.entities.User;
 import com.kuriata.exceptions.DAOException;
 
 public interface IUserDAO extends IDAO<User>{
-    public User findByLogin(String userLogin) throws DAOException;
+    User findByLogin(String userLogin) throws DAOException;
+    boolean loginNotRegistered(String userLogin) throws DAOException;
 }

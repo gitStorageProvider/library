@@ -17,12 +17,12 @@ public class MySQLDAOFactory implements IDAOFactory {
     }
 
     @Override
-    public IShelfDAO getShelfsDAO(WrappedConnection wrappedConnection) throws DAOException {
+    public IShelfDAO getShelfsDAO() throws DAOException {
         return new ShelfDAO();
     }
 
     @Override
-    public IUserDAO getUsersDAO(WrappedConnection wrappedConnection) {
+    public IUserDAO getUsersDAO() {
         return new UserDAO();
     }
 
@@ -32,7 +32,13 @@ public class MySQLDAOFactory implements IDAOFactory {
     }
 
     @Override
-    public IUserBookDAO getUserBookDao() throws DAOException {
+    public IUserBookDAO getUserBookDAO() throws DAOException {
         return new UserBookDAO();
     }
+
+    @Override
+    public IUserAuthorityDAO getUserAuthorityDAO() throws DAOException {
+        return new UserAuthorityDAO();
+    }
+
 }

@@ -51,7 +51,7 @@ public class TestServlet extends HttpServlet {
             IBookService bookService = new BookService(
                     AbstractDAOFactory.getDAOFactory().getBooksDAO(),
                     AbstractDAOFactory.getDAOFactory().getShelfBookDAO(),
-                    AbstractDAOFactory.getDAOFactory().getUserBookDao());
+                    AbstractDAOFactory.getDAOFactory().getUserBookDAO());
             List<Book> bookList = bookService.getAllAvailableBooks();
             resp.getWriter().println("\n\n\nAvailable books:\n");
             for (Book one : bookList) {
@@ -80,7 +80,7 @@ public class TestServlet extends HttpServlet {
             IBookService bookService = new BookService(
                     AbstractDAOFactory.getDAOFactory().getBooksDAO(),
                     AbstractDAOFactory.getDAOFactory().getShelfBookDAO(),
-                    AbstractDAOFactory.getDAOFactory().getUserBookDao());
+                    AbstractDAOFactory.getDAOFactory().getUserBookDAO());
             List<Book> bookList = bookService.getAllBooks();
             for (Book one : bookList) {
                 resp.getWriter().println(one + ";\n");

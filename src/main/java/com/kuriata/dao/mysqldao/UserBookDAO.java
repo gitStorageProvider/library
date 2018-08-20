@@ -23,7 +23,6 @@ public class UserBookDAO implements IUserBookDAO {
     public static final String SQL_DELETE_RECORD_BY_ID = "DELETE FROM " + USER_BOOK_TABLE_NAME + " WHERE id = ?";
     public static final String SQL_SELECT_RECORDS_BY_USER_ID = "SELECT * FROM " + USER_BOOK_TABLE_NAME + " WHERE user_id = ?";
 
-
     @Override
     public List<UserBook> findAll() throws DAOException {
         List<UserBook> result = new ArrayList<>();

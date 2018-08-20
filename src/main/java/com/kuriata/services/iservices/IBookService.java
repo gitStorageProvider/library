@@ -15,5 +15,4 @@ public interface IBookService {
     List<UserBook> getAllTakenBooks() throws ServiceException;
 
     List<UserBook> getAllBooksTakenByUser (int userId) throws ServiceException;
-
 }
