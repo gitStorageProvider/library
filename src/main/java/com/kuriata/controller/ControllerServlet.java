@@ -1,27 +1,15 @@
 package com.kuriata.controller;
 
-import com.kuriata.dao.connection.WrappedConnection;
-import com.kuriata.dao.daofactory.AbstractDAOFactory;
-import com.kuriata.dao.idao.IAuthorDAO;
-import com.kuriata.dao.mysqldao.AuthorDAO;
-import com.kuriata.entities.Author;
-import com.kuriata.exceptions.DAOException;
+import com.kuriata.controller.commands.ICommand;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
+import java.util.Enumeration;
 
 @WebServlet("/controller")
 public class ControllerServlet extends HttpServlet {
@@ -83,20 +71,42 @@ public class ControllerServlet extends HttpServlet {
 //            e.printStackTrace();
 //        }
 
-        try {
-            AuthorDAO authorDAO = (AuthorDAO) AbstractDAOFactory.getDAOFactory().getAuthorsDAO();
-            List<Author> authorList = authorDAO.findAll();
-            resp.getWriter().println("List size of uthors is: "+authorList.size());
-            StringBuilder sb = new StringBuilder();
-            for(Author one: authorList){
-                sb.append(one.getId()+ ", "+one.getCountry()+", "+one.getFullName()+";\n");
+//        try {
+//            AuthorDAO authorDAO = (AuthorDAO) AbstractDAOFactory.getDAOFactory().getAuthorsDAO();
+//            List<Author> authorList = authorDAO.findAll();
+//            resp.getWriter().println("List size of uthors is: "+authorList.size());
+//            StringBuilder sb = new StringBuilder();
+//            for(Author one: authorList){
+//                sb.append(one.getId()+ ", "+one.getCountry()+", "+one.getFullName()+";\n");
+//            }
+//            resp.getWriter().println(sb);
+//            resp.getWriter().println("\n find author by id = 1: \n");
+//            Author foundByIDAuthor = authorDAO.findById(1);
+//            resp.getWriter().println(foundByIDAuthor.getId()+ ", "+foundByIDAuthor.getCountry()+", "+foundByIDAuthor.getFullName()+";\n");
+//        } catch (DAOException e) {
+//            e.printStackTrace();
+//        }
+        CommandFactory commandFactory = new CommandFactory();
+        ICommand command = commandFactory.defineCommand(req);
+        String page = command.execute(req);
+
+        Enumeration e = (Enumeration) (req.getSession().getAttributeNames());
+        while (e.hasMoreElements()) {
+            Object tring;
+            if ((tring = e.nextElement()) != null) {
+                System.out.println("-->" + req.getSession().getValue((String) tring));
+                System.out.println("<br/>");
             }
-            resp.getWriter().println(sb);
-            resp.getWriter().println("\n find author by id = 1: \n");
-            Author foundByIDAuthor = authorDAO.findById(1);
-            resp.getWriter().println(foundByIDAuthor.getId()+ ", "+foundByIDAuthor.getCountry()+", "+foundByIDAuthor.getFullName()+";\n");
-        } catch (DAOException e) {
-            e.printStackTrace();
+        }
+
+        if (page != null) {
+            System.out.println("Computed page = " + page);
+            RequestDispatcher dispatcher =
+                    getServletContext().getRequestDispatcher(page);
+            dispatcher.forward(req, resp);
+        } else {
+            page = "/html/errorPage.html";
+            resp.sendRedirect(req.getContextPath() + page);
         }
     }
 }

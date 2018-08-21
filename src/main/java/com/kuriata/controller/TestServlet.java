@@ -176,7 +176,12 @@ public class TestServlet extends HttpServlet {
 
     private void testUserServices(HttpServletResponse resp) {
 //        IUserService userService = new UserService();
-        UserService userService = new UserService();
+        UserService userService = null;
+        try {
+            userService = new UserService(AbstractDAOFactory.getDAOFactory().getUsersDAO(), AbstractDAOFactory.getDAOFactory().getUserAuthorityDAO());
+        } catch (DAOException e) {
+            e.printStackTrace();
+        }
         User result = null;
         try {
             result = userService.login("root", "root");
