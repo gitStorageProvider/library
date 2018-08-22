@@ -2,13 +2,17 @@ package com.kuriata.controller.commands;
 
 import com.kuriata.controller.commands.book.ShowAllBooksCommand;
 import com.kuriata.controller.commands.user.LoginCommand;
+import com.kuriata.controller.commands.user.LogoutCommand;
 
 public enum SupportedCommands {
-    ADD_ADMIN("showAllBooks"){{
+    SHOW_ALL_BOOKS("showAllBooks"){{
         this.command = new ShowAllBooksCommand();
     }},
-    ADD_QUESTION("login"){{
+    LOGIN("login"){{
         this.command = new LoginCommand();
+    }},
+    LOGOUT("logout"){{
+        this.command = new LogoutCommand();
     }};
 
     private SupportedCommands(String commandName){

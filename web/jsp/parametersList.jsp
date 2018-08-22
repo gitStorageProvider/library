@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: neo
-  Date: 21.08.2018
-  Time: 13:15
-  To change this template use File | Settings | File Templates.
---%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
@@ -38,16 +31,16 @@ This is parametersList.jsp
 
 
 <br>
-<h1>request parameters:</h1><br>
+<h3>request parameters:</h3>
 <c:forEach items="${param}" var="par">
     Parameter Name/Value : <c:out value="${par.key} - ${par.value}"/><br>
 </c:forEach>
 <br>
-<h1>session objects:</h1><br>
+<h3>session objects:</h3>
 <c:forEach items="${sessionScope}" var="par">
     Session object name/value : <c:out value="${par.key} - ${par.value}"/><br>
 </c:forEach>
-<h1>request objects:</h1><br>
+<h3>request objects:</h3>
 <c:forEach items="${requestScope}" var="par">
     Request object name/value : <c:out value="${par.key} - ${par.value}"/><br>
 </c:forEach>

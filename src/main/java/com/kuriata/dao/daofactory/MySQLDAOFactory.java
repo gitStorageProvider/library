@@ -41,4 +41,8 @@ public class MySQLDAOFactory implements IDAOFactory {
         return new UserAuthorityDAO();
     }
 
+    @Override
+    public IAuthorityDAO getAuthorityDAO() throws DAOException {
+        return new AuthorityDAO();
+    }
 }

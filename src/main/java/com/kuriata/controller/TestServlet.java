@@ -178,7 +178,10 @@ public class TestServlet extends HttpServlet {
 //        IUserService userService = new UserService();
         UserService userService = null;
         try {
-            userService = new UserService(AbstractDAOFactory.getDAOFactory().getUsersDAO(), AbstractDAOFactory.getDAOFactory().getUserAuthorityDAO());
+            userService = new UserService(
+                    AbstractDAOFactory.getDAOFactory().getUsersDAO(),
+                    AbstractDAOFactory.getDAOFactory().getUserAuthorityDAO(),
+                    AbstractDAOFactory.getDAOFactory().getAuthorityDAO());
         } catch (DAOException e) {
             e.printStackTrace();
         }

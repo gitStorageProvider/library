@@ -18,4 +18,6 @@ public interface IDAOFactory {
 
     IUserAuthorityDAO getUserAuthorityDAO() throws DAOException;
 
+    IAuthorityDAO getAuthorityDAO() throws DAOException;
+
 }
