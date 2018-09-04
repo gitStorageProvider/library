@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface IUserBookDAO extends IDAO<UserBook> {
     List<UserBook> findAllByUserId(int userId) throws DAOException;
+    int countBooksTakenByUser(int userId) throws DAOException;
 }

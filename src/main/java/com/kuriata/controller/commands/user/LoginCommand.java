@@ -24,13 +24,15 @@ public class LoginCommand implements ICommand {
             UserService userService = new UserService(
                     AbstractDAOFactory.getDAOFactory().getUsersDAO(),
                     AbstractDAOFactory.getDAOFactory().getUserAuthorityDAO(),
+                    AbstractDAOFactory.getDAOFactory().getUserBookDAO(),
                     AbstractDAOFactory.getDAOFactory().getAuthorityDAO()
             );
             user = userService.login(login, password);
             if (user != null) {
                 authority = userService.getUserAuthorities(user);
 
-                session.setAttribute("userAuthorities", authority);
+                session.setAttribute("isAdmin", authority.isAdmin());
+                session.setAttribute("isReader", authority.isReader());
 
                 session.setAttribute("user", user);
                 session.removeAttribute("authorizationErrorMessage");

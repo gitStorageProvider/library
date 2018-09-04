@@ -65,7 +65,7 @@ public class ShelfDAO implements IShelfDAO {
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_SHELF);
             preparedStatement.setString(1, shelf.getName());
-            preparedStatement.setString(2, shelf.getAdress());
+            preparedStatement.setString(2, shelf.getAddress());
             preparedStatement.setString(3, shelf.getDescription());
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
@@ -82,7 +82,7 @@ public class ShelfDAO implements IShelfDAO {
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_SHELF);
             preparedStatement.setString(1, shelf.getName());
-            preparedStatement.setString(2, shelf.getAdress());
+            preparedStatement.setString(2, shelf.getAddress());
             preparedStatement.setString(3, shelf.getDescription());
             preparedStatement.setInt(4, shelf.getId());
             preparedStatement.executeUpdate();

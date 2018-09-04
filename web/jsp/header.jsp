@@ -3,34 +3,7 @@
 <head>
     <title>Header</title>
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .topnav {
-            overflow: hidden;
-            background-color: #333;
-        }
-
-        .topnav a {
-            float: left;
-            color: #f2f2f2;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-            font-size: 17px;
-        }
-
-        .topnav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
-        .topnav a.active {
-            background-color: #4CAF50;
-            color: white;
-        }
+        <%@include file="/css/styles.css" %>
     </style>
 </head>
 <body>
@@ -41,12 +14,14 @@ This is header.jsp
 
 <div style="padding-left:16px">
     <h2>
-        <c:if test="${user == null}">
-            PLEASE LOG IN
-        </c:if>
-        <c:if test="${user != null}">
-            USER LOGGED IN
-        </c:if>
+        <c:choose>
+            <c:when test="${empty user}">
+                PLEASE LOG IN
+            </c:when>
+            <c:otherwise>
+                YOU LOGGED IN AS: ${user.login}
+            </c:otherwise>
+        </c:choose>
     </h2>
 </div>
 
@@ -60,11 +35,12 @@ This is header.jsp
             </c:if>
     </a>
     <a href="?command=showAllBooks">Books</a>
-    <a href="#XXXX">Available books</a>
+    <a href="?command=showAvailableBooks">Available books</a>
     <a href="#XXXX">All taken books</a>
     <a href="#XXXX">Taken books</a>
-    <a href="#XXXX">Users</a>
-    <a href="#XXXX">Shelves</a>
+    <a href="?command=showAllUsers">Users</a>
+    <a href="?command=showAllAuthors">Authors</a>
+    <a href="?command=showAllShelves">Shelves</a>
 
 </div>
 

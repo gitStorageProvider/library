@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>myLibraryTags</short-name>
+    <uri>myTags</uri>
+
+    <tag>
+        <description>takes authorsList and current user authority "isAdmin" as attributes
+            and iterates by each and return a list for every option must displayed to user</description>
+        <name>authors</name>
+        <tag-class>com.kuriata.tags.AuthorsTag</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>authorsList</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>isAdmin</name>
+            <required>no</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+</taglib>

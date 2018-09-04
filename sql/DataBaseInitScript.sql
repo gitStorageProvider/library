@@ -65,8 +65,8 @@ CREATE TABLE IF NOT EXISTS `library`.`users` (
   `login` VARCHAR(30) NOT NULL,
   `password` VARCHAR(30) NOT NULL,
   `email` VARCHAR(30) NOT NULL,
-  `first_name` VARCHAR(30) NULL DEFAULT NULL,
-  `last_name` VARCHAR(30) NULL DEFAULT NULL,
+  `firstName` VARCHAR(30) NULL DEFAULT NULL,
+  `lastName` VARCHAR(30) NULL DEFAULT NULL,
   `phone` VARCHAR(15) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
   ENGINE = InnoDB
@@ -157,7 +157,7 @@ DROP TABLE IF EXISTS `library`.`authors` ;
 CREATE TABLE IF NOT EXISTS `library`.`authors` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `full_name` VARCHAR(60) NULL,
-  `country` VARCHAR(30) NULL,
+  `details` VARCHAR(30) NULL,
   PRIMARY KEY (`id`))
   ENGINE = InnoDB;
 
@@ -229,9 +229,9 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `library`;
-INSERT INTO `library`.`users` (`id`, `login`, `password`, `email`, `first_name`, `last_name`, `phone`) VALUES (1, 'root', 'root', 'root@gmail.com', 'Andrii', 'Kuriata', '+380978833743');
-INSERT INTO `library`.`users` (`id`, `login`, `password`, `email`, `first_name`, `last_name`, `phone`) VALUES (2, 'Andrii', 'birthDate', 'andrii.user@gmail.com', 'Anonimous', 'User', '+380632984112');
-INSERT INTO `library`.`users` (`id`, `login`, `password`, `email`, `first_name`, `last_name`, `phone`) VALUES (3, 'Roman', 'superPass', 'romeo@me.ua', 'Roman', 'Ivankov', '+380951122456');
+INSERT INTO `library`.`users` (`id`, `login`, `password`, `email`, `firstName`, `lastName`, `phone`) VALUES (1, 'root', 'root', 'root@gmail.com', 'Andrii', 'Kuriata', '+380978833743');
+INSERT INTO `library`.`users` (`id`, `login`, `password`, `email`, `firstName`, `lastName`, `phone`) VALUES (2, 'Andrii', 'birthDate', 'andrii.user@gmail.com', 'Anonimous', 'User', '+380632984112');
+INSERT INTO `library`.`users` (`id`, `login`, `password`, `email`, `firstName`, `lastName`, `phone`) VALUES (3, 'Roman', 'superPass', 'romeo@me.ua', 'Roman', 'Ivankov', '+380951122456');
 
 COMMIT;
 
@@ -278,13 +278,13 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `library`;
-INSERT INTO `library`.`authors` (`id`, `full_name`, `country`) VALUES (1, 'Donald Ervin Knuth', 'USA');
-INSERT INTO `library`.`authors` (`id`, `full_name`, `country`) VALUES (2, 'Calestous Juma', 'Republic of Kenya');
-INSERT INTO `library`.`authors` (`id`, `full_name`, `country`) VALUES (3, 'Adam Grant', 'USA');
-INSERT INTO `library`.`authors` (`id`, `full_name`, `country`) VALUES (4, 'Sheryl Sandberg', 'USA');
-INSERT INTO `library`.`authors` (`id`, `full_name`, `country`) VALUES (5, 'Eric Schmidt', 'USA');
-INSERT INTO `library`.`authors` (`id`, `full_name`, `country`) VALUES (6, 'Jonathan Rosenberg', 'USA');
-INSERT INTO `library`.`authors` (`id`, `full_name`, `country`) VALUES (7, 'Ashlee Vance', 'USA');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (1, 'Donald Ervin Knuth', 'USA');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (2, 'Calestous Juma', 'Republic of Kenya');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (3, 'Adam Grant', 'USA');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (4, 'Sheryl Sandberg', 'USA');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (5, 'Eric Schmidt', 'USA');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (6, 'Jonathan Rosenberg', 'USA');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (7, 'Ashlee Vance', 'USA');
 
 COMMIT;
 

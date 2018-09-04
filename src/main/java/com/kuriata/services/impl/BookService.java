@@ -3,25 +3,32 @@ package com.kuriata.services.impl;
 import com.kuriata.dao.idao.IBookDAO;
 import com.kuriata.dao.idao.IShelfBookDAO;
 import com.kuriata.dao.idao.IUserBookDAO;
+import com.kuriata.dao.idao.IUserDAO;
 import com.kuriata.entities.Book;
+import com.kuriata.entities.TakenBook;
+import com.kuriata.entities.User;
 import com.kuriata.entities.UserBook;
 import com.kuriata.exceptions.DAOException;
 import com.kuriata.exceptions.ServiceException;
 import com.kuriata.services.iservices.IBookService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BookService implements IBookService {
 
     IBookDAO bookDAO;
     IShelfBookDAO shelfBookDAO;
     IUserBookDAO userBookDAO;
+    private IUserDAO userDAO;
 
-    public BookService(IBookDAO bookDAO, IShelfBookDAO shelfBookDAO, IUserBookDAO userBookDAO) {
+    public BookService(IBookDAO bookDAO, IShelfBookDAO shelfBookDAO, IUserBookDAO userBookDAO, IUserDAO userDAO) {
         this.bookDAO = bookDAO;
         this.shelfBookDAO = shelfBookDAO;
         this.userBookDAO = userBookDAO;
+        this.userDAO = userDAO;
     }
 
     @Override
@@ -34,25 +41,33 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public List<Book> getAllAvailableBooks() throws ServiceException {
+    public Map<Book, Integer> getAllAvailableBooks() throws ServiceException {
         List<Integer> availableBooksIdList;
-        List<Book> availableBooksList= new ArrayList<>();;
+        Map<Book, Integer> availableBooks = new HashMap<>();
         try {
             availableBooksIdList = shelfBookDAO.findAvailableBooksId();
-            for(int one: availableBooksIdList){
-                availableBooksList.add(bookDAO.findById(one));
+            for (int one : availableBooksIdList) {
+                Book book = bookDAO.findById(one);
+                Integer quantity = shelfBookDAO.booksQuantityByBookId(one);
+                availableBooks.put(book, quantity);
             }
         } catch (DAOException e) {
             e.printStackTrace();
         }
-        return availableBooksList;
+        return availableBooks;
     }
 
     @Override
-    public List<UserBook> getAllTakenBooks() {
-        List<UserBook> result = new ArrayList<>();
-        try{
-            result = userBookDAO.findAll();
+    public List<TakenBook> getAllTakenBooks() {
+        List<TakenBook> result = new ArrayList<>();
+        List<UserBook> userBookList;
+        try {
+            userBookList = userBookDAO.findAll();
+            for(UserBook oneRecord : userBookList){
+                Book book = bookDAO.findById(oneRecord.getBookId());
+                User user = userDAO.findById(oneRecord.getUserId());
+                result.add(new TakenBook(oneRecord, book, user));
+            }
         } catch (DAOException e) {
             e.printStackTrace();
         }
@@ -60,10 +75,16 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public List<UserBook> getAllBooksTakenByUser(int userId) throws ServiceException {
-        List<UserBook> result = new ArrayList<>();
-        try{
-            result = userBookDAO.findAllByUserId(userId);
+    public List<TakenBook> getAllBooksTakenByUser(int userId) throws ServiceException {
+        List<TakenBook> result = new ArrayList<>();
+        List<UserBook> userBookList;
+        try {
+            userBookList = userBookDAO.findAllByUserId(userId);
+            for(UserBook oneRecord : userBookList){
+                Book book = bookDAO.findById(oneRecord.getBookId());
+                User user = userDAO.findById(oneRecord.getUserId());
+                result.add(new TakenBook(oneRecord, book, user));
+            }
         } catch (DAOException e) {
             e.printStackTrace();
         }

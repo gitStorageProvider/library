@@ -17,8 +17,8 @@ public class AuthorDAO implements IAuthorDAO {
     public static final String AUTHORS_TABLE_NAME = "authors";
     public static final String SQL_SELECT_ALL_AUTHORS = "SELECT * FROM " + AUTHORS_TABLE_NAME;
     public static final String SQL_SELECT_AUTHOR_BY_ID = "SELECT * FROM " + AUTHORS_TABLE_NAME + " WHERE id = ?";
-    public static final String SQL_INSERT_AUTHOR = "INSERT INTO " + AUTHORS_TABLE_NAME + "(full_name, country) VALUES (?, ?)";
-    public static final String SQL_UPDATE_AUTHOR = "UPDATE " + AUTHORS_TABLE_NAME + " SET full_name = ?, country = ? WHERE id = ?";
+    public static final String SQL_INSERT_AUTHOR = "INSERT INTO " + AUTHORS_TABLE_NAME + "(full_name, details) VALUES (?, ?)";
+    public static final String SQL_UPDATE_AUTHOR = "UPDATE " + AUTHORS_TABLE_NAME + " SET full_name = ?, details = ? WHERE id = ?";
     public static final String SQL_DELETE_AUTHOR_BY_ID = "DELETE FROM " + AUTHORS_TABLE_NAME + " WHERE id = ?";
 
     @Override
@@ -31,7 +31,7 @@ public class AuthorDAO implements IAuthorDAO {
             while (resultSet.next()) {
                 result.add(new Author(resultSet.getInt("id"),
                         resultSet.getString("full_name"),
-                        resultSet.getString("country")));
+                        resultSet.getString("details")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -49,7 +49,7 @@ public class AuthorDAO implements IAuthorDAO {
             while (resultSet.next()) {
                 result = new Author(resultSet.getInt("id"),
                         resultSet.getString("full_name"),
-                        resultSet.getString("country"));
+                        resultSet.getString("details"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -64,7 +64,7 @@ public class AuthorDAO implements IAuthorDAO {
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_AUTHOR);
             preparedStatement.setString(1, author.getFullName());
-            preparedStatement.setString(2, author.getCountry());
+            preparedStatement.setString(2, author.getDetails());
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next())
@@ -81,7 +81,7 @@ public class AuthorDAO implements IAuthorDAO {
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_AUTHOR);
             preparedStatement.setString(1, author.getFullName());
-            preparedStatement.setString(2, author.getCountry());
+            preparedStatement.setString(2, author.getDetails());
             preparedStatement.setInt(3, author.getId());
             preparedStatement.executeUpdate();
             return true;

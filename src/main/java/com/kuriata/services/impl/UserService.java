@@ -2,6 +2,7 @@ package com.kuriata.services.impl;
 
 import com.kuriata.dao.idao.IAuthorityDAO;
 import com.kuriata.dao.idao.IUserAuthorityDAO;
+import com.kuriata.dao.idao.IUserBookDAO;
 import com.kuriata.dao.idao.IUserDAO;
 import com.kuriata.entities.Authority;
 import com.kuriata.entities.User;
@@ -14,21 +15,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserService implements IUserService {
-    //ToDo: make userDAO initialization in constructor
     private IUserDAO userDAO;
     private IUserAuthorityDAO userAuthorityDAO;
+    private IUserBookDAO userBookDAO;
     private IAuthorityDAO authorityDAO;
 
-    public UserService(IUserDAO userDAO, IUserAuthorityDAO userAuthorityDAO, IAuthorityDAO authorityDAO) {
+    public UserService(IUserDAO userDAO, IUserAuthorityDAO userAuthorityDAO, IUserBookDAO userBookDAO, IAuthorityDAO authorityDAO) {
         this.userDAO = userDAO;
         this.userAuthorityDAO = userAuthorityDAO;
+        this.userBookDAO = userBookDAO;
         this.authorityDAO = authorityDAO;
     }
 
     @Override
     public User login(String userLogin, String userPassword) throws ServiceException {
         try {
-            User user = userDAO.findByLogin(userLogin);
+            User user = null;
+            if (userLogin != null) {
+                user = userDAO.findByLogin(userLogin);
+            }
             if (user != null && user.getPassword().equals(userPassword)) {
                 return user;
             }
@@ -39,12 +44,13 @@ public class UserService implements IUserService {
     }
 
     public Authority getUserAuthorities(User user) throws ServiceException {
-        Authority combinedAuthority = new Authority(); combinedAuthority.setAuthorityName("combinedAuthority");
+        Authority combinedAuthority = new Authority();
+        combinedAuthority.setAuthorityName("combinedAuthority");
         List<UserAuthority> userAuthorities;
         try {
             userAuthorities = userAuthorityDAO.findAllByUserId(user.getId());
             if (!userAuthorities.isEmpty()) {
-                for (UserAuthority one : userAuthorities){
+                for (UserAuthority one : userAuthorities) {
                     System.out.println(one);
                     //Combine all authorities from table user_authority into one authority
                     //that contain all admin and reader privileges
@@ -60,13 +66,39 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean deleteByID(int id) {
+    public boolean deleteByID(int userId) throws ServiceException {
         try {
-            return userDAO.deleteById(id);
+            if(isUserUsed(userId)){
+                throw new ServiceException("User can't be deleted. Used in DB.", new IllegalArgumentException());
+            } else {
+                return userAuthorityDAO.deleteByUserId(userId)&&userDAO.deleteById(userId);
+            }
         } catch (DAOException e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    //ToDo: realize method below
+    @Override
+    public boolean enableAdminPrivilegies() throws ServiceException {
+        throw new UnsupportedOperationException();
+    }
+
+    //ToDo: realize method below
+    @Override
+    public boolean update(User user) throws ServiceException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isUserUsed(int userId) throws ServiceException {
+        try {
+            return userBookDAO.countBooksTakenByUser(userId) > 0;
+        } catch (DAOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     //ToDo: check is method body correct or not
@@ -95,12 +127,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> findAll() {
+    public List<User> findAll() throws ServiceException {
         List<User> result = new ArrayList<>();
         try {
             result = userDAO.findAll();
         } catch (DAOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            throw new ServiceException("Can't retrieve all users.", e);
         }
         return result;
     }
@@ -115,41 +148,4 @@ public class UserService implements IUserService {
         }
         return result;
     }
-
-
-    //ToDo: implement method properly
-//    @Override
-//    public boolean enableAdminPrivilegies() {
-//        return false;
-//    }
-
-    //ToDo: implement method properly
-//    @Override
-//    public List<User> findAll() {
-//        return null;
-//    }
-
-    //ToDo: implement method properly
-//    @Override
-//    public User findByID(int id) {
-//        return null;
-//    }
-
-    //ToDo: implement method properly
-//    @Override
-//    public boolean update(User user) {
-//        return false;
-//    }
-
-    //ToDo: implement method properly
-//    @Override
-//    public boolean deleteByID(int id) {
-//        return false;
-//    }
-
-    //ToDo: implement method properly
-//    @Override
-//    public boolean isLoginAlreadyExist(String login) {
-//        return false;
-//    }
 }

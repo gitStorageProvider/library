@@ -8,4 +8,7 @@ import java.util.List;
 
 public interface IShelfBookDAO extends IDAO<ShelfBook> {
     List<Integer> findAvailableBooksId() throws DAOException;
+    int booksCountOnShelfWithId(int shelfId) throws DAOException;
+    int booksQuantityByBookId(int bookId) throws DAOException;
+
 }

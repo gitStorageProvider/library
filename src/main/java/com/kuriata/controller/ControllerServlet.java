@@ -77,12 +77,12 @@ public class ControllerServlet extends HttpServlet {
 //            resp.getWriter().println("List size of uthors is: "+authorList.size());
 //            StringBuilder sb = new StringBuilder();
 //            for(Author one: authorList){
-//                sb.append(one.getId()+ ", "+one.getCountry()+", "+one.getFullName()+";\n");
+//                sb.append(one.getId()+ ", "+one.getDetails()+", "+one.getFullName()+";\n");
 //            }
 //            resp.getWriter().println(sb);
 //            resp.getWriter().println("\n find author by id = 1: \n");
 //            Author foundByIDAuthor = authorDAO.findById(1);
-//            resp.getWriter().println(foundByIDAuthor.getId()+ ", "+foundByIDAuthor.getCountry()+", "+foundByIDAuthor.getFullName()+";\n");
+//            resp.getWriter().println(foundByIDAuthor.getId()+ ", "+foundByIDAuthor.getDetails()+", "+foundByIDAuthor.getFullName()+";\n");
 //        } catch (DAOException e) {
 //            e.printStackTrace();
 //        }

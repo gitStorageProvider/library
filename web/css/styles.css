@@ -1,3 +1,73 @@
+/*input, select {*/
+    /*width: 100%;*/
+    /*padding: 12px 20px;*/
+    /*margin: 8px 0;*/
+    /*display: inline-block;*/
+    /*border: 1px solid #ccc;*/
+    /*border-radius: 4px;*/
+    /*box-sizing: border-box;*/
+/*}*/
+
+/*input[type=submit] {*/
+    /*width: 100%;*/
+    /*background-color: #4CAF50;*/
+    /*color: white;*/
+    /*padding: 14px 20px;*/
+    /*margin: 8px 0;*/
+    /*border: none;*/
+    /*border-radius: 4px;*/
+    /*cursor: pointer;*/
+/*}*/
+
+/*input[type=submit]:hover {*/
+    /*background-color: #45a049;*/
+/*}*/
+
+/*div {*/
+    /*border-radius: 5px;*/
+    /*background-color: #f2f2f2;*/
+    /*padding: 20px;*/
+/*}*/
+
+/*.short-div {*/
+    /*width: 300px;*/
+/*}*/
+
+/*.wrong-input, .error-message{*/
+    /*color: red;*/
+    /*display: block;*/
+/*}*/
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+}
+
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.topnav a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+
 input, select {
     width: 100%;
     padding: 12px 20px;
@@ -36,4 +106,42 @@ div {
 .wrong-input, .error-message{
     color: red;
     display: block;
+    text-align: right;
+}
+
+.medium-div {
+    width: 400px;
+}
+
+.medium-input{
+    height: 100px;
+}
+
+.wrong-input, .error-message {
+    color: red;
+    display: block;
+    text-align: right;
+}
+
+#outTable {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#outTable td, #outTable th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#outTable tr:nth-child(even){background-color: #f2f2f2;}
+
+#outTable tr:hover {background-color: #ddd;}
+
+#outTable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
 }

@@ -41,7 +41,7 @@
     List<Author> authorList = authorDAO.findAll();
     sb.append("List size of uthors is: "+authorList.size()+"\n");
     for(Author one: authorList){
-      sb.append(one.getId()+ ", "+one.getCountry()+", "+one.getFullName()+";\n");
+      sb.append(one.getId()+ ", "+one.getDetails()+", "+one.getFullName()+";\n");
     }
   %>
   <%=sb%>

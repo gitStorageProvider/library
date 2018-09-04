@@ -60,7 +60,8 @@ public class UserDAO implements IUserDAO {
                         resultSet.getString("phone"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            throw new DAOException("Can't retrieve user by id", e);
         }
         return result;
     }
@@ -73,8 +74,8 @@ public class UserDAO implements IUserDAO {
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getEmail());
-            preparedStatement.setString(4, user.getFirst_name());
-            preparedStatement.setString(5, user.getLast_name());
+            preparedStatement.setString(4, user.getFirstName());
+            preparedStatement.setString(5, user.getLastName());
             preparedStatement.setString(6, user.getPhone());
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
@@ -93,8 +94,8 @@ public class UserDAO implements IUserDAO {
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getEmail());
-            preparedStatement.setString(4, user.getFirst_name());
-            preparedStatement.setString(5, user.getLast_name());
+            preparedStatement.setString(4, user.getFirstName());
+            preparedStatement.setString(5, user.getLastName());
             preparedStatement.setString(6, user.getPhone());
             ;
             preparedStatement.setInt(7, user.getId());

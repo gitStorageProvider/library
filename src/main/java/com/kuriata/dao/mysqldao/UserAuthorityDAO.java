@@ -21,7 +21,7 @@ public class UserAuthorityDAO implements IUserAuthorityDAO {
     public static final String SQL_INSERT_RECORD = "INSERT INTO " + USER_AUTHORITY_TABLE_NAME + "(user_id, authority_id) VALUES (?, ?)";
     public static final String SQL_UPDATE_RECORD = "UPDATE " + USER_AUTHORITY_TABLE_NAME + " SET user_id = ?, authority_id = ? WHERE id = ?";
     public static final String SQL_DELETE_RECORD_BY_ID = "DELETE FROM " + USER_AUTHORITY_TABLE_NAME + " WHERE id = ?";
-
+    public static final String SQL_DELETE_RECORD_BY_USER_ID = "DELETE FROM " + USER_AUTHORITY_TABLE_NAME + " WHERE user_id = ?";
     public static final String SQL_SELECT_ALL_RECORDS_BY_USER_ID = "SELECT * FROM " + USER_AUTHORITY_TABLE_NAME + " WHERE user_id = ?";
 
     @Override
@@ -124,5 +124,18 @@ public class UserAuthorityDAO implements IUserAuthorityDAO {
             e.printStackTrace();
         }
         return result;
+    }
+
+    @Override
+    public boolean deleteByUserId(int userId) throws DAOException {
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
+            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_RECORD_BY_USER_ID);
+            preparedStatement.setInt(1, userId);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

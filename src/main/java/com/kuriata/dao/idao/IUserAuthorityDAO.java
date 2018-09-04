@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface IUserAuthorityDAO extends IDAO<UserAuthority>{
     List<UserAuthority> findAllByUserId (int userId) throws DAOException;
+    boolean deleteByUserId(int userId) throws DAOException;
 }

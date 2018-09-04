@@ -3,7 +3,6 @@ package com.kuriata.dao.mysqldao;
 import com.kuriata.dao.connection.AbstractConnectionFactory;
 import com.kuriata.dao.connection.WrappedConnection;
 import com.kuriata.dao.idao.IUserBookDAO;
-import com.kuriata.entities.Author;
 import com.kuriata.entities.UserBook;
 import com.kuriata.exceptions.DAOException;
 
@@ -22,6 +21,8 @@ public class UserBookDAO implements IUserBookDAO {
     public static final String SQL_UPDATE_RECORD = "UPDATE " + USER_BOOK_TABLE_NAME + " SET user_id = ?, book_id = ?, date = ? WHERE id = ?";
     public static final String SQL_DELETE_RECORD_BY_ID = "DELETE FROM " + USER_BOOK_TABLE_NAME + " WHERE id = ?";
     public static final String SQL_SELECT_RECORDS_BY_USER_ID = "SELECT * FROM " + USER_BOOK_TABLE_NAME + " WHERE user_id = ?";
+    public static final String SQL_COUNT_BOOKS_TAKEN_BY_USER_WITH_ID = "SELECT COUNT(*) FROM " + USER_BOOK_TABLE_NAME + " WHERE user_id = ?";
+
 
     @Override
     public List<UserBook> findAll() throws DAOException {
@@ -131,4 +132,22 @@ public class UserBookDAO implements IUserBookDAO {
         }
         return result;
     }
+
+    @Override
+    public int countBooksTakenByUser(int userId) throws DAOException {
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
+            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_COUNT_BOOKS_TAKEN_BY_USER_WITH_ID);
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            int res = resultSet.getInt(1);
+            System.out.println("countBooksTakenByUser in UserBookDAO for UserId=" +userId +". Returned:"+res);
+            return res;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+
 }

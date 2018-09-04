@@ -6,6 +6,8 @@ import com.kuriata.exceptions.DAOException;
 public interface IDAOFactory {
     IAuthorDAO getAuthorsDAO() throws DAOException;
 
+    IBookAuthorDAO getBookAuthorsDAO() throws DAOException;
+
     IBookDAO getBooksDAO() throws DAOException;
 
     IShelfDAO getShelfsDAO() throws DAOException;

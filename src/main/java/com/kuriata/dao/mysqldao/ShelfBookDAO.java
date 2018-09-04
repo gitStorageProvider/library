@@ -21,6 +21,8 @@ public class ShelfBookDAO implements IShelfBookDAO {
     public static final String SQL_INSERT_RECORD = "INSERT INTO " + SHELF_BOOK_TABLE_NAME + "(shelf_id, book_id, quantity) VALUES (?, ?, ?)";
     public static final String SQL_UPDATE_RECORD = "UPDATE " + SHELF_BOOK_TABLE_NAME + " SET shelf_id = ?, book_id = ?, quantity = ? WHERE id = ?";
     public static final String SQL_DELETE_RECORD_BY_ID = "DELETE FROM " + SHELF_BOOK_TABLE_NAME + " WHERE id = ?";
+    public static final String SQL_COUNT_BOOKS_ON_SHELF_WITH_ID = "SELECT Count(*) FROM " + SHELF_BOOK_TABLE_NAME + " WHERE shelf_id = ?";
+    public static final String SQL_COUNT_QUANTITY_OF_BOOKS_WITH_ID = "SELECT quantity FROM " + SHELF_BOOK_TABLE_NAME + " WHERE book_id = ?";
 
 
     @Override
@@ -124,5 +126,33 @@ public class ShelfBookDAO implements IShelfBookDAO {
             e.printStackTrace();
         }
         return result;
+    }
+
+    @Override
+    public int booksCountOnShelfWithId(int shelfId) throws DAOException {
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
+            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_COUNT_BOOKS_ON_SHELF_WITH_ID);
+            preparedStatement.setInt(1, shelfId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    @Override
+    public int booksQuantityByBookId(int bookId) throws DAOException {
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
+            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_COUNT_QUANTITY_OF_BOOKS_WITH_ID);
+            preparedStatement.setInt(1, bookId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            return resultSet.getInt("quantity");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }

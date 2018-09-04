@@ -10,7 +10,7 @@ public interface IUserService {
 
     User login(String userLogin, String userPassword) throws ServiceException;
 
-    public Authority getUserAuthorities(User user)throws ServiceException;
+    public Authority getUserAuthorities(User user) throws ServiceException;
 
     boolean isLoginAlreadyExist(String login) throws ServiceException;
 
@@ -22,8 +22,9 @@ public interface IUserService {
 
     boolean deleteByID(int id) throws ServiceException;
 
-//    boolean enableAdminPrivilegies()throws ServiceException;
+    boolean enableAdminPrivilegies() throws ServiceException;
 
-//  ToDo: think are methods bellow needed or not
-//    boolean update(User user)throws ServiceException;
+    boolean update(User user) throws ServiceException;
+
+    boolean isUserUsed(int userId) throws ServiceException;
 }

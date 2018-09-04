@@ -12,6 +12,11 @@ public class MySQLDAOFactory implements IDAOFactory {
     }
 
     @Override
+    public IBookAuthorDAO getBookAuthorsDAO() throws DAOException {
+        return new BookAuthorDAO();
+    }
+
+    @Override
     public IBookDAO getBooksDAO() throws DAOException {
         return new BookDAO();
     }

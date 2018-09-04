@@ -1,13 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-
-<%--<fmt:setLocale value="ru_RU" scope="session"/>--%>
-
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Parameters List</title>
@@ -15,20 +9,6 @@
 <body>
 <body>
 This is parametersList.jsp
-
-
-
-<%
-    // add parameter to session
-    String name = request.getParameter("name");
-    String value = request.getParameter("value");
-    if (name!=null && value!=null && name.length()>0) {
-        session.setAttribute(name,value);
-    }
-%>
-
-
-
 
 <br>
 <h3>request parameters:</h3>
