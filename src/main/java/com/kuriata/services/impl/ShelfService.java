@@ -19,7 +19,6 @@ public class ShelfService implements IShelfService {
         this.shelfBookDAO = shelfBookDAO;
     }
 
-    //ToDo: realize method
     @Override
     public List<Shelf> getAllShelves() throws ServiceException {
         List<Shelf> result = new ArrayList<>();
@@ -31,7 +30,6 @@ public class ShelfService implements IShelfService {
         return result;
     }
 
-    //ToDo: realize method
     @Override
     public boolean addShelf(Shelf shelf) throws ServiceException {
         try {
@@ -42,7 +40,6 @@ public class ShelfService implements IShelfService {
         }
     }
 
-    //ToDo: realize method
     @Override
     public boolean deleteShelfById(int shelfId) throws ServiceException {
         try {

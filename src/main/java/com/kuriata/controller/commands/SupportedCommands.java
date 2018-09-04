@@ -3,6 +3,7 @@ package com.kuriata.controller.commands;
 import com.kuriata.controller.commands.author.AddAuthorCommand;
 import com.kuriata.controller.commands.author.DeleteAuthorCommand;
 import com.kuriata.controller.commands.author.ShowAllAuthorsCommand;
+import com.kuriata.controller.commands.book.AddBookCommand;
 import com.kuriata.controller.commands.book.ShowAllBooksCommand;
 import com.kuriata.controller.commands.book.ShowAvailableBooksCommand;
 import com.kuriata.controller.commands.shelf.AddShelfCommand;
@@ -49,6 +50,9 @@ public enum SupportedCommands {
     }},
     SHOW_ALL_USERS("showAllUsers") {{
         this.command = new ShowAllUsersCommand();
+    }},
+    ADD_BOOK("addBook") {{
+        this.command = new AddBookCommand();
     }}
 
     ;
