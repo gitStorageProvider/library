@@ -31,6 +31,15 @@ public class ShelfService implements IShelfService {
     }
 
     @Override
+    public Shelf getShelfById(int shelfId) throws ServiceException {
+        try{
+            return shelfDAO.findById(shelfId);
+        } catch (DAOException e) {
+            throw new ServiceException("Can't find shelf by id.", e);
+        }
+    }
+
+    @Override
     public boolean addShelf(Shelf shelf) throws ServiceException {
         try {
             shelfDAO.insert(shelf);
@@ -54,10 +63,14 @@ public class ShelfService implements IShelfService {
         }
     }
 
-    //ToDo: realize method
     @Override
     public boolean editShelf(Shelf shelf) throws ServiceException {
-        throw new UnsupportedOperationException();
+        try {
+            shelfDAO.update(shelf);
+            return true;
+        } catch (DAOException e) {
+            throw new ServiceException("Can't update shelf.", e);
+        }
     }
 
     @Override

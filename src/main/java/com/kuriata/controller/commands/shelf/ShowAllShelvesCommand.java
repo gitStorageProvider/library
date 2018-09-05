@@ -34,9 +34,7 @@ public class ShowAllShelvesCommand implements ICommand {
                     AbstractDAOFactory.getDAOFactory().getShelfBookDAO()
             );
             shelvesList = shelfService.getAllShelves();
-        } catch (DAOException e) {
-            e.printStackTrace();
-        } catch (ServiceException e) {
+        }  catch (ServiceException e) {
             e.printStackTrace();
         }
 

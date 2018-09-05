@@ -12,17 +12,17 @@ public class MySQLDAOFactory implements IDAOFactory {
     }
 
     @Override
-    public IBookAuthorDAO getBookAuthorsDAO() throws DAOException {
+    public IBookAuthorDAO getBookAuthorsDAO()  {
         return new BookAuthorDAO();
     }
 
     @Override
-    public IBookDAO getBooksDAO() throws DAOException {
+    public IBookDAO getBooksDAO()  {
         return new BookDAO();
     }
 
     @Override
-    public IShelfDAO getShelfsDAO() throws DAOException {
+    public IShelfDAO getShelfsDAO()  {
         return new ShelfDAO();
     }
 
@@ -32,22 +32,22 @@ public class MySQLDAOFactory implements IDAOFactory {
     }
 
     @Override
-    public IShelfBookDAO getShelfBookDAO() throws DAOException {
+    public IShelfBookDAO getShelfBookDAO()  {
         return new ShelfBookDAO();
     }
 
     @Override
-    public IUserBookDAO getUserBookDAO() throws DAOException {
+    public IUserBookDAO getUserBookDAO()  {
         return new UserBookDAO();
     }
 
     @Override
-    public IUserAuthorityDAO getUserAuthorityDAO() throws DAOException {
+    public IUserAuthorityDAO getUserAuthorityDAO()  {
         return new UserAuthorityDAO();
     }
 
     @Override
-    public IAuthorityDAO getAuthorityDAO() throws DAOException {
+    public IAuthorityDAO getAuthorityDAO() {
         return new AuthorityDAO();
     }
 }

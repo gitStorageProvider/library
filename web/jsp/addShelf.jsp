@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <body>
+<h1>${shelvesOperationMessage}</h1>
+<h1>${shelvesErrorMessage}</h1>
 <div class="medium-div">
     <form action="/controller" method="post">
         <input type="hidden" name="command" value="addShelf">

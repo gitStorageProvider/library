@@ -62,6 +62,11 @@
                 <option value="${shelf.id}">${shelf.address}, ${shelf.name}</option>
             </c:forEach>
         </select>
+
+        <label for="bookQuantity">Quantity</label>
+        <input type="text" id="bookQuantity" name="bookQuantity" placeholder="Book quantity.."
+               value="${bookDescription}">
+        <label class="wrong-input">${bookQuantityErrorMessage}</label>
         <input type="submit" value="register">
     </form>
 </div>

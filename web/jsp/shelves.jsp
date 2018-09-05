@@ -7,9 +7,7 @@
 <h1>${shelvesOperationMessage}</h1>
 <h1>${shelvesErrorMessage}</h1>
 <c:choose>
-    <c:when test="${empty shelvesList}">
-        Empty.
-    </c:when>
+    <c:when test="${empty shelvesList}"/>
     <c:otherwise>
         <table id="outTable">
             <thead>

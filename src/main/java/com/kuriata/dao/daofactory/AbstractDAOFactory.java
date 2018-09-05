@@ -5,10 +5,9 @@ import com.kuriata.exceptions.DAOException;
 public class AbstractDAOFactory {
     private static SupportedDatabases currentDatabase = SupportedDatabases.MYSQL;
 
-    public static IDAOFactory getDAOFactory() throws DAOException {
+    public static IDAOFactory getDAOFactory()  {
         IDAOFactory factory = null;
-        try {
-            switch (currentDatabase) {
+             switch (currentDatabase) {
                 case MYSQL:
                     factory = new MySQLDAOFactory();
                     break;
@@ -17,9 +16,6 @@ public class AbstractDAOFactory {
                 default:
                     throw new UnsupportedOperationException("AbstractDAOFactory not initialized.");
             }
-        }catch (Exception e) {
-            throw new DAOException("Excepthion in AbstractDAOFactory while creationg new servicefactory.", e);
-        }
         return factory;
     }
 

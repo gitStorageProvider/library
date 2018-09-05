@@ -114,10 +114,12 @@ public class UserService implements IUserService {
 
     @Override
     public boolean registerNewUser(User user) {
-        int generatedId;
+        int generatedUserId;
+        int generatedUserAuthorityId;
         try {
-            generatedId = userDAO.insert(user);
-            if (generatedId != 0) {
+            generatedUserId = userDAO.insert(user);
+            generatedUserAuthorityId = userAuthorityDAO.insert(new UserAuthority(0, generatedUserId, 1));
+            if (generatedUserId != 0 && generatedUserAuthorityId != 0) {
                 return true;
             }
         } catch (DAOException e) {

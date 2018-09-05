@@ -8,6 +8,8 @@ import java.util.List;
 public interface IShelfService {
     List<Shelf> getAllShelves() throws ServiceException;
 
+    Shelf getShelfById(int shelfId) throws ServiceException;
+
     boolean addShelf(Shelf shelf) throws ServiceException;
 
     boolean deleteShelfById(int shelfId) throws ServiceException;

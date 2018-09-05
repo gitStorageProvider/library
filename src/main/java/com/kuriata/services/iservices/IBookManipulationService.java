@@ -7,15 +7,13 @@ import com.kuriata.entities.User;
 import java.util.List;
 
 public interface IBookManipulationService {
-    boolean addBookInLibrary (Book book, int Quantity, Shelf shelf);
+    boolean addBook (Book book, int quantity, int shelfId);
 
     boolean changeBookInLibrary (Book book);
 
     boolean deleteBookFromLibrary (int bookId);
 
     boolean setBookTakenByUser (int bookId, User user);
-
-    boolean setBookAuthor (int bookId, int authorId);
 
     boolean deleteAuthorFromBook (int authorId, int bookId);
 

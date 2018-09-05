@@ -21,5 +21,9 @@
     </c:forEach>
     </tbody>
 </table>
+<form action="/controller" method="get">
+    <input type="hidden" name="command" value="addBook">
+    <input type="submit" value="Add new book">
+</form>
 </body>
 </html>

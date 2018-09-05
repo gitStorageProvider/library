@@ -28,8 +28,6 @@ public class DeleteAuthorCommand implements ICommand {
                 authorService.deleteAuthorById(authorId);
                 req.setAttribute("authorsOperationMessage", "Author deleted.");
             }
-        } catch (DAOException e) {
-            e.printStackTrace();
         } catch (ServiceException e) {
             e.printStackTrace();
         }

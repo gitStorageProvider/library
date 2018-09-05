@@ -3,6 +3,8 @@ package com.kuriata.controller.commands.shelf;
 import com.kuriata.controller.commands.ICommand;
 import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.entities.Shelf;
+import com.kuriata.exceptions.DAOException;
+import com.kuriata.exceptions.ServiceException;
 import com.kuriata.services.impl.ShelfService;
 import com.kuriata.services.iservices.IShelfService;
 import com.kuriata.validators.IValidator;
@@ -11,7 +13,8 @@ import com.kuriata.validators.Validator;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-public class AddShelfCommand implements ICommand {
+public class EditShelfCommand implements ICommand {
+    int shelfId;
     private String name;
     private String address;
     private String description;
@@ -19,29 +22,50 @@ public class AddShelfCommand implements ICommand {
     @Override
     public String execute(HttpServletRequest req) throws ServletException {
         String requestMethodName = req.getMethod();
+        Shelf shelf = null;
         if (requestMethodName.equalsIgnoreCase("GET")) {
-            return "/jsp/addShelf.jsp";
+            shelfId = Integer.parseInt(req.getParameter("shelfId"));
+
+            try {
+                IShelfService shelfService = new ShelfService(
+                        AbstractDAOFactory.getDAOFactory().getShelfsDAO(),
+                        AbstractDAOFactory.getDAOFactory().getShelfBookDAO()
+                );
+                shelf = shelfService.getShelfById(shelfId);
+                setInitialValues(req, shelf);
+                setRequestAttributes(req);
+            } catch (ServiceException e) {
+                e.printStackTrace();
+            }
+            return "/jsp/editShelf.jsp";
         } else {
             extractRequestParameters(req);
             setRequestAttributes(req);
             if (checkFields(req)) {
-                //if all entered fields values valid - add new shelf
-                Shelf shelfToAdd = new Shelf(0, name, address, description);
+                //if all entered fields values valid - edit shelf in DAO
+                shelf = new Shelf(shelfId, name, address, description);
                 try {
                     IShelfService shelfService = new ShelfService(
                             AbstractDAOFactory.getDAOFactory().getShelfsDAO(),
                             AbstractDAOFactory.getDAOFactory().getShelfBookDAO()
                     );
-                    shelfService.addShelf(shelfToAdd);
+                    shelfService.editShelf(shelf);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                req.setAttribute("shelvesOperationMessage", "Shelve added.");
+                req.setAttribute("shelvesOperationMessage", "Shelve changed.");
                 return "/jsp/shelves.jsp";
             }
-            //else set error messages an return the same page
-            return "/jsp/addShelf.jsp";
+            //else set all entered data an return the same page
+            setRequestAttributes(req);
+            return "/jsp/editShelf.jsp";
         }
+    }
+
+    private void setInitialValues(HttpServletRequest req, Shelf shelf) {
+        name = shelf.getName();
+        address = shelf.getAddress();
+        description = shelf.getDescription();
     }
 
     private void extractRequestParameters(HttpServletRequest req) {
@@ -76,4 +100,6 @@ public class AddShelfCommand implements ICommand {
         }
         return isNameValid && isAddressValid && isDescriptionValid;
     }
+
+
 }

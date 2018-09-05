@@ -8,6 +8,7 @@ import com.kuriata.controller.commands.book.ShowAllBooksCommand;
 import com.kuriata.controller.commands.book.ShowAvailableBooksCommand;
 import com.kuriata.controller.commands.shelf.AddShelfCommand;
 import com.kuriata.controller.commands.shelf.DeleteShelfCommand;
+import com.kuriata.controller.commands.shelf.EditShelfCommand;
 import com.kuriata.controller.commands.shelf.ShowAllShelvesCommand;
 import com.kuriata.controller.commands.user.*;
 
@@ -44,6 +45,9 @@ public enum SupportedCommands {
     }},
     ADD_SHELF("addShelf") {{
         this.command = new AddShelfCommand();
+    }},
+    EDIT_SHELF("editShelf") {{
+        this.command = new EditShelfCommand();
     }},
     DELETE_SHELF("deleteShelf") {{
         this.command = new DeleteShelfCommand();

@@ -31,8 +31,6 @@ public class ShowAllAuthorsCommand implements ICommand {
                     AbstractDAOFactory.getDAOFactory().getBookAuthorsDAO()
             );
             authorList = authorService.getAllAuthors();
-        } catch (DAOException e) {
-            e.printStackTrace();
         } catch (ServiceException e) {
             e.printStackTrace();
         }

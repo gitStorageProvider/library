@@ -27,6 +27,7 @@ public class AddBookCommand implements ICommand {
     private int author3Id;
     private int author4Id;
     private int shelfId;
+    private int bookQuantity;
 
     @Override
     public String execute(HttpServletRequest req) throws ServletException {
@@ -54,17 +55,10 @@ public class AddBookCommand implements ICommand {
                     extractRequestParameters(req);
                     setRequestAttributes(req);
 
-                    req.setAttribute("bookShortTitleErrorMessage", bookShortTitle);
-                    req.setAttribute("bookFullTitleErrorMessage", bookFullTitle);
-                    req.setAttribute("bookDescriptionErrorMessage", bookDescription);
-                    req.setAttribute("bookKeyWordsMessage", bookKeyWords);
-
                     return "/jsp/addBook.jsp";
                 }
             }
         } catch (ServiceException e) {
-            e.printStackTrace();
-        } catch (DAOException e) {
             e.printStackTrace();
         }
         return null;
@@ -81,6 +75,7 @@ public class AddBookCommand implements ICommand {
         author4Id = Integer.parseInt(req.getParameter("author4Id"));
         author1Id = Integer.parseInt(req.getParameter("author1Id"));
         shelfId = Integer.parseInt(req.getParameter("shelfId"));
+        bookQuantity = Integer.parseInt(req.getParameter("bookQuantity"));
     }
 
     private void setRequestAttributes(HttpServletRequest req) {
@@ -89,5 +84,6 @@ public class AddBookCommand implements ICommand {
         req.setAttribute("bookFullTitle", bookFullTitle);
         req.setAttribute("bookDescription", bookDescription);
         req.setAttribute("bookKeyWords", bookKeyWords);
+        req.setAttribute("bookQuantity", bookQuantity);
     }
 }

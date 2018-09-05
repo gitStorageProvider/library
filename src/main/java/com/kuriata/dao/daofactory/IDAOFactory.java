@@ -4,22 +4,21 @@ import com.kuriata.dao.idao.*;
 import com.kuriata.exceptions.DAOException;
 
 public interface IDAOFactory {
-    IAuthorDAO getAuthorsDAO() throws DAOException;
+    IAuthorDAO getAuthorsDAO();
 
-    IBookAuthorDAO getBookAuthorsDAO() throws DAOException;
+    IBookAuthorDAO getBookAuthorsDAO();
 
-    IBookDAO getBooksDAO() throws DAOException;
+    IBookDAO getBooksDAO();
 
-    IShelfDAO getShelfsDAO() throws DAOException;
+    IShelfDAO getShelfsDAO();
 
-    IUserDAO getUsersDAO() throws DAOException;
+    IUserDAO getUsersDAO() ;
 
-    IShelfBookDAO getShelfBookDAO() throws DAOException;
+    IShelfBookDAO getShelfBookDAO() ;
 
-    IUserBookDAO getUserBookDAO() throws DAOException;
+    IUserBookDAO getUserBookDAO() ;
 
-    IUserAuthorityDAO getUserAuthorityDAO() throws DAOException;
+    IUserAuthorityDAO getUserAuthorityDAO() ;
 
-    IAuthorityDAO getAuthorityDAO() throws DAOException;
-
+    IAuthorityDAO getAuthorityDAO() ;
 }

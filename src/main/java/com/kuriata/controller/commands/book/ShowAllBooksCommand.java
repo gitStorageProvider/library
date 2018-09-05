@@ -6,6 +6,7 @@ import com.kuriata.entities.Author;
 import com.kuriata.entities.Book;
 import com.kuriata.exceptions.DAOException;
 import com.kuriata.exceptions.ServiceException;
+import com.kuriata.exceptions.ServletException;
 import com.kuriata.services.impl.AuthorService;
 import com.kuriata.services.impl.BookService;
 import com.kuriata.services.iservices.IAuthorService;
@@ -20,7 +21,7 @@ import java.util.Map;
 public class ShowAllBooksCommand implements ICommand {
 
     @Override
-    public String execute(HttpServletRequest req) {
+    public String execute(HttpServletRequest req) throws ServletException {
         Map<Book, List<Author>> allBooksAuthorsMap = new HashMap<>();
         try {
             IBookService bookService = new BookService(
@@ -38,10 +39,8 @@ public class ShowAllBooksCommand implements ICommand {
                 List<Author> authorsList = authorService.getAllAuthorsByBookId(oneBook.getId());
                 allBooksAuthorsMap.put(oneBook, authorsList);
             }
-        } catch (DAOException e) {
-            e.printStackTrace();
         } catch (ServiceException e) {
-            e.printStackTrace();
+            throw new ServletException("Can't show all books.", e);
         }
 
         req.setAttribute("allBooksAuthorsMap", allBooksAuthorsMap);

@@ -35,9 +35,7 @@ public class ShowAllUsersCommand implements ICommand {
                     AbstractDAOFactory.getDAOFactory().getAuthorityDAO()
             );
             usersList = userService.findAll();
-        } catch (DAOException e) {
-            e.printStackTrace();
-        } catch (ServiceException e) {
+        }  catch (ServiceException e) {
             e.printStackTrace();
         }
 

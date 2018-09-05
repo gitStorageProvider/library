@@ -41,9 +41,7 @@ public class LoginCommand implements ICommand {
                 session.setAttribute("authorizationErrorMessage", "Wrong login/password");
             }
             //ToDo: services must throw only ServiceExceptions
-        } catch (DAOException e) {
-            e.printStackTrace();
-        } catch (ServiceException e) {
+        }  catch (ServiceException e) {
             e.printStackTrace();
         }
         return "/jsp/login.jsp";

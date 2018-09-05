@@ -25,9 +25,7 @@ public class ShowAvailableBooksCommand implements ICommand {
                     AbstractDAOFactory.getDAOFactory().getUsersDAO()
             );
             allAvailableBooksMap = bookService.getAllAvailableBooks();
-        } catch (DAOException e) {
-            e.printStackTrace();
-        } catch (ServiceException e) {
+        }  catch (ServiceException e) {
             e.printStackTrace();
         }
 

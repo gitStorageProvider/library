@@ -24,7 +24,8 @@ public class ControllerServlet extends HttpServlet {
         process(req, resp);
     }
 
-    private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, ServletException {
+
 ////        resp.getWriter().printf("Controller servlet process().");
 //        Context ctx = null;
 //        Connection connection = null;
@@ -88,7 +89,12 @@ public class ControllerServlet extends HttpServlet {
 //        }
         CommandFactory commandFactory = new CommandFactory();
         ICommand command = commandFactory.defineCommand(req);
-        String page = command.execute(req);
+        String page = null;
+        try {
+            page = command.execute(req);
+        } catch (com.kuriata.exceptions.ServletException e) {
+            e.printStackTrace();
+        }
 
         Enumeration e = (Enumeration) (req.getSession().getAttributeNames());
         while (e.hasMoreElements()) {

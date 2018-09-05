@@ -41,7 +41,6 @@ This is header.jsp
     <a href="?command=showAllUsers">Users</a>
     <a href="?command=showAllAuthors">Authors</a>
     <a href="?command=showAllShelves">Shelves</a>
-    <a href="?command=addBook">AddBookTestCommand</a>
 </div>
 <br>
 </body>
