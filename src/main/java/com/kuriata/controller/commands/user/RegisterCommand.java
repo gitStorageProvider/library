@@ -45,7 +45,7 @@ public class RegisterCommand implements ICommand {
                 } catch (ServiceException e) {
                     e.printStackTrace();
                 }
-                return "/controller?command=showAllBooks";
+                return "/controller?command=login";
             } else {
                 return "/jsp/registerUser.jsp";
             }

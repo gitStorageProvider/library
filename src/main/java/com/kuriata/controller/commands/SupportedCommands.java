@@ -3,9 +3,7 @@ package com.kuriata.controller.commands;
 import com.kuriata.controller.commands.author.AddAuthorCommand;
 import com.kuriata.controller.commands.author.DeleteAuthorCommand;
 import com.kuriata.controller.commands.author.ShowAllAuthorsCommand;
-import com.kuriata.controller.commands.book.AddBookCommand;
-import com.kuriata.controller.commands.book.ShowAllBooksCommand;
-import com.kuriata.controller.commands.book.ShowAvailableBooksCommand;
+import com.kuriata.controller.commands.book.*;
 import com.kuriata.controller.commands.shelf.AddShelfCommand;
 import com.kuriata.controller.commands.shelf.DeleteShelfCommand;
 import com.kuriata.controller.commands.shelf.EditShelfCommand;
@@ -18,6 +16,12 @@ public enum SupportedCommands {
     }},
     SHOW_AVAILABLE_BOOKS("showAvailableBooks") {{
         this.command = new ShowAvailableBooksCommand();
+    }},
+    SHOW_ALL_TAKEN_BOOKS("showAllTakenBooks") {{
+        this.command = new ShowAllTakenBooks();
+    }},
+    SHOW_TAKEN_BOOKS("showTakenBooks") {{
+        this.command = new ShowTakenBooks();
     }},
     LOGIN("login") {{
         this.command = new LoginCommand();
@@ -57,9 +61,7 @@ public enum SupportedCommands {
     }},
     ADD_BOOK("addBook") {{
         this.command = new AddBookCommand();
-    }}
-
-    ;
+    }};
 
     private SupportedCommands(String commandName) {
         this.commandName = commandName;

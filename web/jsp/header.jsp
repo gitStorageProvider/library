@@ -26,21 +26,29 @@ This is header.jsp
 </div>
 
 <div class="topnav">
-    <a class="active"
-            <c:if test="${user == null}">
-                href="?command=register">Register
-            </c:if>
-            <c:if test="${user != null}">
-                href="?command=logout">Log out
-            </c:if>
-    </a>
-    <a href="?command=showAllBooks">Books</a>
+    <c:if test="${user == null}">
+        <a href="?command=register">Register</a>
+    </c:if>
+    <c:if test="${user == null}">
+        <a class="active" href="?command=login">Log in</a>
+    </c:if>
+    <c:if test="${user != null}">
+        <a  href="?command=logout">Log out</a>
+    </c:if>
+
     <a href="?command=showAvailableBooks">Available books</a>
-    <a href="#XXXX">All taken books</a>
-    <a href="#XXXX">Taken books</a>
-    <a href="?command=showAllUsers">Users</a>
     <a href="?command=showAllAuthors">Authors</a>
     <a href="?command=showAllShelves">Shelves</a>
+
+    <c:if test="${isReader}">
+        <a href="?command=showTakenBooks">Taken books</a>
+    </c:if>
+    <c:if test="${isAdmin}">
+        <a href="?command=showAllBooks">Books</a>
+        <a href="?command=showAllTakenBooks">All taken books</a>
+        <a href="?command=showAllUsers">Users</a>
+    </c:if>
+
 </div>
 <br>
 </body>

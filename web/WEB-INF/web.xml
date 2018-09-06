@@ -11,6 +11,24 @@
         <session-timeout>5</session-timeout>
     </session-config>
 
+    <servlet>
+        <servlet-name>controller</servlet-name>
+        <servlet-class>com.kuriata.controller.ControllerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>controller</servlet-name>
+        <url-pattern>/controller</url-pattern>
+    </servlet-mapping>
+    
+    <filter>
+        <filter-name>commandFilter</filter-name>
+        <filter-class>com.kuriata.filters.CommandAccessFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>commandFilter</filter-name>
+        <url-pattern>/controller</url-pattern>
+    </filter-mapping>
+
     <jsp-config>
         <jsp-property-group>
             <url-pattern>/*</url-pattern>

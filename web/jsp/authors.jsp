@@ -1,17 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <%@ taglib prefix="myT" uri="/WEB-INF/tags/implicit.tld" %>
-
 <html>
-<head>
-    <title>Authors</title>
-</head>
 <body>
 <h1>${authorsOperationMessage}</h1>
 <h1>${authorsErrorMessage}</h1>
 <c:choose>
     <c:when test="${empty authorsList}">
-        Empty.
     </c:when>
     <c:otherwise>
         <table id="outTable">
@@ -35,9 +29,11 @@
         </table>
     </c:otherwise>
 </c:choose>
-<form action="/controller" method="get">
-    <input type="hidden" name="command" value="addAuthor">
-    <input type="submit" value="Add new author">
-</form>
+<c:if test="${isAdmin}">
+    <form action="/controller" method="get">
+        <input type="hidden" name="command" value="addAuthor">
+        <input type="submit" value="Add new author">
+    </form>
+</c:if>
 </body>
 </html>

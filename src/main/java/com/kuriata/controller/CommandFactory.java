@@ -31,8 +31,7 @@ public class CommandFactory {
             }
             System.out.println("CommandFactory result: " + resultCommand);
         } catch (IllegalArgumentException e) {
-            System.out.println("Exception while command definition." + e);
-            req.setAttribute("wrongCommand", commandString);
+
         }
         return resultCommand;
     }
