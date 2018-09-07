@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="myT" uri="/WEB-INF/tags/implicit.tld" %>
+<fmt:setBundle basename="text"/>
 <html>
 <body>
 <h1>${authorsOperationMessage}</h1>
@@ -10,11 +11,11 @@
     <c:otherwise>
         <table id="outTable">
             <thead>
-            <th>Author full name</th>
-            <th>Details</th>
+            <th><fmt:message key="label.tableHead.authorsfullname"/></th>
+            <th><fmt:message key="label.tableHead.details"/></th>
                 <c:if test="${isAdmin}">
-                    <th>Option</th>
-                    <th>Option</th>
+                    <th><fmt:message key="label.tableHead.option"/></th>
+                    <th><fmt:message key="label.tableHead.option"/></th>
                 </c:if>
             </thead>
             <tbody>
@@ -32,7 +33,7 @@
 <c:if test="${isAdmin}">
     <form action="/controller" method="get">
         <input type="hidden" name="command" value="addAuthor">
-        <input type="submit" value="Add new author">
+        <input type="submit" value="<fmt:message key="button.addAuthor"/>">
     </form>
 </c:if>
 </body>

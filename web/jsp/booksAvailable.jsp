@@ -1,22 +1,13 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: neo
-  Date: 03.09.2018
-  Time: 16:09
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<fmt:setBundle basename="text"/>
 <html>
-<head>
-    <title>Books</title>
-</head>
 <body>
 <table id="outTable">
     <thead>
     <th>
-        Book, Author
+        <fmt:message key="label.tableHead.book"/>, <fmt:message key="label.tableHead.author"/>
     </th>
-    <th>Quantity</th>
+    <th><fmt:message key="label.tableHead.quantity"/></th>
     </thead>
     <tbody>
     <c:forEach var="oneBook" items="${allAvailableBooksMap}">

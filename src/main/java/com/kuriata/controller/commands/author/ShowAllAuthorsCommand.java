@@ -11,11 +11,13 @@ import com.sun.deploy.net.HttpResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ShowAllAuthorsCommand implements ICommand {
 
     @Override
     public String execute(HttpServletRequest req) {
+
 //        Author a1 = new Author(1, "Author1", "Ukraine");
 //        Author a2 = new Author(2, "Author2", "USA");
 //        Author a3 = new Author(3, "Author3", "Canada");

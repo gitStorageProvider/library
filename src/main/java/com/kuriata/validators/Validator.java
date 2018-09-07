@@ -84,7 +84,7 @@ public class Validator implements IValidator {
     }
 
     @Override
-    public boolean isKeyworsValid(String bookKeyWords) {
+    public boolean isBookKeyworsValid(String bookKeyWords) {
         return BOOK_KEY_WORDS_PATTERN.matcher(bookKeyWords).matches();
     }
 

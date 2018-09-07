@@ -4,12 +4,13 @@ import com.kuriata.controller.commands.ICommand;
 import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.entities.Author;
 import com.kuriata.entities.Shelf;
-import com.kuriata.exceptions.DAOException;
 import com.kuriata.exceptions.ServiceException;
 import com.kuriata.services.impl.AuthorService;
 import com.kuriata.services.impl.ShelfService;
 import com.kuriata.services.iservices.IAuthorService;
 import com.kuriata.services.iservices.IShelfService;
+import com.kuriata.validators.IValidator;
+import com.kuriata.validators.Validator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,10 +23,11 @@ public class AddBookCommand implements ICommand {
     private String bookFullTitle;
     private String bookDescription;
     private String bookKeyWords;
-    private int author1Id;
-    private int author2Id;
-    private int author3Id;
-    private int author4Id;
+    private List<Integer> uniqueAuthorIdList;
+    private String author1IdString;
+    private String author2IdString;
+    private String author3IdString;
+    private String author4IdString;
     private int shelfId;
     private int bookQuantity;
 
@@ -43,18 +45,26 @@ public class AddBookCommand implements ICommand {
                     AbstractDAOFactory.getDAOFactory().getAuthorsDAO(),
                     AbstractDAOFactory.getDAOFactory().getBookAuthorsDAO()
             );
+            //get all available authors and shelves (registered in system)
             authorList = authorService.getAllAuthors();
             shelvesList = shelfService.getAllShelves();
-
             if (requestMethodName.equalsIgnoreCase("GET")) {
                 req.setAttribute("authorsList", authorList);
                 req.setAttribute("shelvesList", shelvesList);
                 return "/jsp/addBook.jsp";
             } else {
-                if (true) {
-                    extractRequestParameters(req);
-                    setRequestAttributes(req);
-
+                extractRequestParameters(req);
+                setRequestAttributes(req);
+                if (checkFields(req)) {
+                    req.getSession().setAttribute("PARAMS ARE", " OK!");
+                    return "/jsp/addBook.jsp";
+                } else {
+                    //if entered data is invalid - get all available authors and shelves (registered in system)
+                    //put them into request and show the same page
+                    authorList = authorService.getAllAuthors();
+                    shelvesList = shelfService.getAllShelves();
+                    req.setAttribute("authorsList", authorList);
+                    req.setAttribute("shelvesList", shelvesList);
                     return "/jsp/addBook.jsp";
                 }
             }
@@ -64,18 +74,56 @@ public class AddBookCommand implements ICommand {
         return null;
     }
 
-        private void extractRequestParameters(HttpServletRequest req) {
+    private void extractRequestParameters(HttpServletRequest req) {
         HttpSession session = req.getSession();
         bookShortTitle = req.getParameter("bookShortTitle");
         bookFullTitle = req.getParameter("bookFullTitle");
         bookDescription = req.getParameter("bookDescription");
         bookKeyWords = req.getParameter("bookKeyWords");
-        author1Id = Integer.parseInt(req.getParameter("author1Id"));
-        author2Id = Integer.parseInt(req.getParameter("author2Id"));
-        author4Id = Integer.parseInt(req.getParameter("author4Id"));
-        author1Id = Integer.parseInt(req.getParameter("author1Id"));
-        shelfId = Integer.parseInt(req.getParameter("shelfId"));
-        bookQuantity = Integer.parseInt(req.getParameter("bookQuantity"));
+        String author1IdString = req.getParameter("author1Id");
+        String author2IdString = req.getParameter("author2Id");
+        String author3IdString = req.getParameter("author3Id");
+        String author4IdString = req.getParameter("author4Id");
+        String shelfIdString = req.getParameter("shelfId");
+        String bookQuantityString = req.getParameter("bookQuantity");
+
+        uniqueAuthorIdList = new ArrayList();
+        if (author1IdString != null && !author1IdString.isEmpty()) {
+            int tempValue = Integer.parseInt(author1IdString);
+            //add first author id without check contains the collection (uniqueAuthorIdList)
+            //it or not
+            uniqueAuthorIdList.add(tempValue);
+        }
+        if (author2IdString != null && !author2IdString.isEmpty()) {
+            int tempValue = Integer.parseInt(author2IdString);
+            //if collection (uniqueAuthorIdList) not contains second author id - add it
+            if (!uniqueAuthorIdList.contains(tempValue)) {
+                uniqueAuthorIdList.add(tempValue);
+            }
+        }
+        if (author3IdString != null && !author3IdString.isEmpty()) {
+            int tempValue = Integer.parseInt(author3IdString);
+            if (!uniqueAuthorIdList.contains(tempValue)) {
+                uniqueAuthorIdList.add(tempValue);
+            }
+        }
+        if (author4IdString != null && !author4IdString.isEmpty()) {
+            int tempValue = Integer.parseInt(author4IdString);
+            //if collection (uniqueAuthorIdList) not contains second author id - add it
+            if (!uniqueAuthorIdList.contains(tempValue)) {
+                uniqueAuthorIdList.add(tempValue);
+            }
+        }
+        if (shelfIdString != null && !shelfIdString.isEmpty()) {
+            shelfId = Integer.parseInt(shelfIdString);
+        }
+        if (bookQuantityString != null && !bookQuantityString.isEmpty()) {
+            try {
+                bookQuantity = Integer.parseInt(bookQuantityString);
+            } catch (NumberFormatException e) {
+                bookQuantity = 0;
+            }
+        }
     }
 
     private void setRequestAttributes(HttpServletRequest req) {
@@ -84,6 +132,49 @@ public class AddBookCommand implements ICommand {
         req.setAttribute("bookFullTitle", bookFullTitle);
         req.setAttribute("bookDescription", bookDescription);
         req.setAttribute("bookKeyWords", bookKeyWords);
+        //ToDo: remove next line cause in shouldn't be used (must be set again when same page returned)
+        req.setAttribute("uniqueAuthorsList@@@", uniqueAuthorIdList);
+        //ToDo: remove next line cause in shouldn't be used (must be set again when same page returned)
+        req.setAttribute("shelfId@@@", shelfId);
         req.setAttribute("bookQuantity", bookQuantity);
+    }
+
+    private boolean checkFields(HttpServletRequest req) throws ServletException {
+        IValidator validator = new Validator();
+        boolean isBookShortTitleValid = true;
+        boolean isBookFullTitleValid = true;
+        boolean isBookDescriptionValid = true;
+        boolean isBookKeyWordsValid = true;
+        boolean isUniqueAuthorIdListValid = true;
+        boolean isShelfIdValid = true;
+        boolean isBookQuantityValid = true;
+
+        if (!validator.isBookShortTitleValid(bookShortTitle)) {
+            req.setAttribute("bookShortTitleErrorMessage", "invalid input");
+            isBookShortTitleValid = false;
+        }
+        if (!validator.isBookFullTitleValid(bookFullTitle)) {
+            req.setAttribute("bookFullTitleErrorMessage", "invalid input");
+            isBookFullTitleValid = false;
+        }
+        if (!validator.isBookDescriptionValid(bookDescription)) {
+            req.setAttribute("bookDescriptionErrorMessage", "invalid input");
+            isBookDescriptionValid = false;
+        }
+        if (!validator.isBookKeyworsValid(bookKeyWords)) {
+            req.setAttribute("bookKeyWordsErrorMessage", "invalid input");
+            isBookKeyWordsValid = false;
+        }
+        if (!validator.isBookAuthorsValid(uniqueAuthorIdList)) {
+            req.setAttribute("bookAuthorsErrorMessage", "invalid input");
+            isUniqueAuthorIdListValid = false;
+        }
+        if (!validator.isBookQuantityValid(bookQuantity)) {
+            req.setAttribute("bookQuantityErrorMessage", "invalid input");
+            isBookQuantityValid = false;
+        }
+        return isBookShortTitleValid && isBookFullTitleValid && isBookDescriptionValid
+                && isBookKeyWordsValid && isUniqueAuthorIdListValid &&
+                isShelfIdValid && isBookQuantityValid;
     }
 }

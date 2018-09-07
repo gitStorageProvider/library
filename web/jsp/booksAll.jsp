@@ -1,12 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<fmt:setBundle basename="text"/>
 <html>
 <body>
 <table id="outTable">
     <thead>
     <th>
-        Books Available
+        <fmt:message key="label.tableHead.bookavailable"/>
     </th>
-    <th>Authors</th>
+    <th><fmt:message key="label.tableHead.author"/></th>
     </thead>
     <tbody>
     <c:forEach var="oneMapEntry" items="${allBooksAuthorsMap}">
@@ -23,7 +24,7 @@
 </table>
 <form action="/controller" method="get">
     <input type="hidden" name="command" value="addBook">
-    <input type="submit" value="Add new book">
+    <input type="submit" value="<fmt:message key="button.addBook"/>">
 </form>
 </body>
 </html>

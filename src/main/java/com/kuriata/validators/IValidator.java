@@ -14,7 +14,7 @@ public interface IValidator {
     boolean isBookShortTitleValid(String bookShortTitle);
     boolean isBookFullTitleValid(String bookFullTitle);
     boolean isBookDescriptionValid(String bookDescription);
-    boolean isKeyworsValid(String bookKeyWords);
+    boolean isBookKeyworsValid(String bookKeyWords);
     boolean isBookAuthorsValid(List<Integer> authorsIdList);
     boolean isBookQuantityValid(int bookQuantity);
 

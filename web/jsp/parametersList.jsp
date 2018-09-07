@@ -3,13 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
-<head>
-    <title>Parameters List</title>
-</head>
 <body>
-<body>
-This is parametersList.jsp
-
 <br>
 <h3>request parameters:</h3>
 <c:forEach items="${param}" var="par">
@@ -25,6 +19,5 @@ This is parametersList.jsp
     Request object name/value : <c:out value="${par.key} - ${par.value}"/><br>
 </c:forEach>
 <hr>
-</body>
 </body>
 </html>

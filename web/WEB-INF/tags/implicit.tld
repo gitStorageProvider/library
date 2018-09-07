@@ -11,7 +11,7 @@
 
     <tag>
         <description>takes authorsList and current user authority "isAdmin" as attributes
-            and iterates by each and return a list for every option must displayed to user</description>
+            and iterates by each and return a list for every option that must displayed to user</description>
         <name>authors</name>
         <tag-class>com.kuriata.tags.AuthorsTag</tag-class>
         <body-content>scriptless</body-content>
