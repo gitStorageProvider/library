@@ -1,28 +1,26 @@
 package com.kuriata.services.iservices;
 
 import com.kuriata.entities.Book;
-import com.kuriata.entities.Shelf;
-import com.kuriata.entities.User;
+import com.kuriata.exceptions.ServiceException;
 
 import java.util.List;
 
 public interface IBookManipulationService {
-    boolean addBook (Book book, int quantity, int shelfId);
+    boolean addBook(Book book, List<Integer> authorsIdList, int quantity, int shelfId) throws ServiceException;
 
-    boolean changeBookInLibrary (Book book);
+//    boolean changeBookInLibrary (Book book);
 
-    boolean deleteBookFromLibrary (int bookId);
+    boolean deleteBookFromLibrary(int bookId) throws ServiceException;
 
-    boolean setBookTakenByUser (int bookId, User user);
+    boolean setBookTakenByUser(int bookId, int userId) throws ServiceException;
 
-    boolean deleteAuthorFromBook (int authorId, int bookId);
-
-    boolean returnBook(int userId, int bookId);
-
-    boolean changeBookQuantity (int bookId, int quantity);
+    boolean returnBook(int recordId) throws ServiceException;
 
     //ToDo: add method to interface and implement it
 //    List<Book> findBook (String criteria)
+    public boolean isBookAllreadyTakenByUser(int bookId, int userId) throws ServiceException;
+
+    public int getBookQuantity(int bookId) throws ServiceException;
 
 
 }

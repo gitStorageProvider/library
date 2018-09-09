@@ -20,7 +20,9 @@ public class ShelfBookDAO implements IShelfBookDAO {
     public static final String SQL_SELECT_RECORD_BY_ID = "SELECT * FROM " + SHELF_BOOK_TABLE_NAME + " WHERE id = ?";
     public static final String SQL_INSERT_RECORD = "INSERT INTO " + SHELF_BOOK_TABLE_NAME + "(shelf_id, book_id, quantity) VALUES (?, ?, ?)";
     public static final String SQL_UPDATE_RECORD = "UPDATE " + SHELF_BOOK_TABLE_NAME + " SET shelf_id = ?, book_id = ?, quantity = ? WHERE id = ?";
+    public static final String SQL_UPDATE_QUANTITY_BY_BOOK_ID = "UPDATE " + SHELF_BOOK_TABLE_NAME + " SET quantity = ? WHERE book_id = ?";
     public static final String SQL_DELETE_RECORD_BY_ID = "DELETE FROM " + SHELF_BOOK_TABLE_NAME + " WHERE id = ?";
+    public static final String SQL_DELETE_RECORD_BY_BOOK_ID = "DELETE FROM " + SHELF_BOOK_TABLE_NAME + " WHERE book_id = ?";
     public static final String SQL_COUNT_BOOKS_ON_SHELF_WITH_ID = "SELECT Count(*) FROM " + SHELF_BOOK_TABLE_NAME + " WHERE shelf_id = ?";
     public static final String SQL_COUNT_QUANTITY_OF_BOOKS_WITH_ID = "SELECT quantity FROM " + SHELF_BOOK_TABLE_NAME + " WHERE book_id = ?";
 
@@ -153,6 +155,50 @@ public class ShelfBookDAO implements IShelfBookDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+
+    @Override
+    public int insert(WrappedConnection wrappedConnection, ShelfBook entity) throws DAOException {
+        int result = 0;
+
+        try (PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_RECORD)) {
+            preparedStatement.setInt(1, entity.getShelfId());
+            preparedStatement.setInt(2, entity.getBookId());
+            preparedStatement.setInt(3, entity.getQuantity());
+            preparedStatement.executeUpdate();
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next())
+                    result = generatedKeys.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean deleteByBookId(WrappedConnection wrappedConnection, int bookId) throws DAOException {
+        try (PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_RECORD_BY_BOOK_ID)) {
+            preparedStatement.setInt(1, bookId);
+            int result = preparedStatement.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateQuantityByBookId(WrappedConnection wrappedConnection, int quantity, int bookId) {
+        try (PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_QUANTITY_BY_BOOK_ID)) {
+            preparedStatement.setInt(1, quantity);
+            preparedStatement.setInt(2, bookId);
+            int result = preparedStatement.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

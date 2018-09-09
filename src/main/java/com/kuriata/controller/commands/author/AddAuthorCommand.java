@@ -3,9 +3,10 @@ package com.kuriata.controller.commands.author;
 import com.kuriata.controller.commands.ICommand;
 import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.entities.Author;
+import com.kuriata.exceptions.ServletException;
+import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.AuthorService;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -32,14 +33,13 @@ public class AddAuthorCommand implements ICommand {
                         AbstractDAOFactory.getDAOFactory().getBookAuthorsDAO()
                 );
                 authorService.addAuthor(author);
-                req.setAttribute("authorsOperationMessage", "Author added.");
+                req.setAttribute("authorsOperationMessage", MessagesProvider.getMessage("message.authorAdded"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         return "/jsp/authors.jsp";
     }
-
 
     private void extractRequestParameters(HttpServletRequest req) {
         HttpSession session = req.getSession();

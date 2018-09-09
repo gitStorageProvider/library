@@ -1,7 +1,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <fmt:setBundle basename="text"/>
-<fmt:setLocale value="ru_RU" scope="session"/>
+<%--<c:if test="${not empty newLocale}">--%>
+    <%--<fmt:setLocale value="${newLocale}" scope="session"/>--%>
+<%--</c:if>--%>
 <html>
 <head>
     <style>
@@ -47,7 +49,7 @@
         <a href="?command=showAllUsers"><fmt:message key="navigation.users"/></a>
     </c:if>
 
-    <a href="?command=changeLocale&locale=ruRU" style="float: right;">Ru</a>
+    <a href="?command=changeLanguage&locale=ru_RU" style="float: right;">Ru</a>
 </div>
 </body>
 </html>

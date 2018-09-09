@@ -5,10 +5,10 @@ import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.entities.User;
 import com.kuriata.exceptions.DAOException;
 import com.kuriata.exceptions.ServiceException;
+import com.kuriata.exceptions.ServletException;
 import com.kuriata.services.impl.UserService;
 import com.kuriata.services.iservices.IUserService;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;

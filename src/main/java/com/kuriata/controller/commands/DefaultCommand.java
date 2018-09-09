@@ -1,6 +1,7 @@
 package com.kuriata.controller.commands;
 
-import javax.servlet.ServletException;
+import com.kuriata.exceptions.ServletException;
+
 import javax.servlet.http.HttpServletRequest;
 
 public class DefaultCommand implements ICommand {

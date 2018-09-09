@@ -8,6 +8,7 @@ import com.kuriata.controller.commands.shelf.AddShelfCommand;
 import com.kuriata.controller.commands.shelf.DeleteShelfCommand;
 import com.kuriata.controller.commands.shelf.EditShelfCommand;
 import com.kuriata.controller.commands.shelf.ShowAllShelvesCommand;
+import com.kuriata.controller.commands.system.ChangeLanguageCommand;
 import com.kuriata.controller.commands.user.*;
 
 public enum SupportedCommands {
@@ -61,6 +62,18 @@ public enum SupportedCommands {
     }},
     ADD_BOOK("addBook") {{
         this.command = new AddBookCommand();
+    }},
+    DELETE_BOOK("deleteBook") {{
+        this.command = new DeleteBookCommand();
+    }},
+    TAKE_BOOK("takeBook") {{
+        this.command = new TakeBookCommand();
+    }},
+    RETURN_BOOK("returnBook") {{
+        this.command = new ReturnBookCommand();
+    }},
+    CHANGE_LANGUAGE("changeLanguage") {{
+        this.command = new ChangeLanguageCommand();
     }};
 
     private SupportedCommands(String commandName) {

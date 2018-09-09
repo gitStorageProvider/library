@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandAccessFilter implements Filter {
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
 
-    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {}
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -41,6 +41,14 @@ public class CommandAccessFilter implements Filter {
             add("showAvailableBooks");
             add("showAllAuthors");
             add("showAllShelves");
+            add("changeLanguage");
+            //ToDo: move command bellow to adminPermitted
+            add("deleteBook");
+            //ToDo: move command bellow to readerPermitted
+            add("takeBook");
+            //ToDo: move command bellow to readerPermitted
+            add("returnBook");
+
         }};
 
         HttpSession session = ((HttpServletRequest) request).getSession();
@@ -70,7 +78,5 @@ public class CommandAccessFilter implements Filter {
     }
 
     @Override
-    public void destroy() {
-
-    }
+    public void destroy() {}
 }

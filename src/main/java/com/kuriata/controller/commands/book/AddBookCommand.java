@@ -3,16 +3,18 @@ package com.kuriata.controller.commands.book;
 import com.kuriata.controller.commands.ICommand;
 import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.entities.Author;
+import com.kuriata.entities.Book;
 import com.kuriata.entities.Shelf;
 import com.kuriata.exceptions.ServiceException;
+import com.kuriata.exceptions.ServletException;
 import com.kuriata.services.impl.AuthorService;
+import com.kuriata.services.impl.BookManipulationService;
 import com.kuriata.services.impl.ShelfService;
 import com.kuriata.services.iservices.IAuthorService;
 import com.kuriata.services.iservices.IShelfService;
 import com.kuriata.validators.IValidator;
 import com.kuriata.validators.Validator;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -24,10 +26,6 @@ public class AddBookCommand implements ICommand {
     private String bookDescription;
     private String bookKeyWords;
     private List<Integer> uniqueAuthorIdList;
-    private String author1IdString;
-    private String author2IdString;
-    private String author3IdString;
-    private String author4IdString;
     private int shelfId;
     private int bookQuantity;
 
@@ -56,8 +54,20 @@ public class AddBookCommand implements ICommand {
                 extractRequestParameters(req);
                 setRequestAttributes(req);
                 if (checkFields(req)) {
+                    BookManipulationService bookManipulationService = new BookManipulationService(
+                            AbstractDAOFactory.getDAOFactory().getBooksDAO(),
+                            AbstractDAOFactory.getDAOFactory().getUserBookDAO(),
+                            AbstractDAOFactory.getDAOFactory().getShelfBookDAO(),
+                            AbstractDAOFactory.getDAOFactory().getBookAuthorsDAO()
+                    );
+                    bookManipulationService.addBook(
+                            new Book(0, bookShortTitle, bookFullTitle, bookDescription, bookKeyWords),
+                            uniqueAuthorIdList, bookQuantity, shelfId
+                    );
+                    //ToDo: delete row below (it was used for debugging)
                     req.getSession().setAttribute("PARAMS ARE", " OK!");
-                    return "/jsp/addBook.jsp";
+                    req.setAttribute("operationMessage", "Book added.");
+                    return "/jsp/message.jsp";
                 } else {
                     //if entered data is invalid - get all available authors and shelves (registered in system)
                     //put them into request and show the same page
@@ -132,10 +142,6 @@ public class AddBookCommand implements ICommand {
         req.setAttribute("bookFullTitle", bookFullTitle);
         req.setAttribute("bookDescription", bookDescription);
         req.setAttribute("bookKeyWords", bookKeyWords);
-        //ToDo: remove next line cause in shouldn't be used (must be set again when same page returned)
-        req.setAttribute("uniqueAuthorsList@@@", uniqueAuthorIdList);
-        //ToDo: remove next line cause in shouldn't be used (must be set again when same page returned)
-        req.setAttribute("shelfId@@@", shelfId);
         req.setAttribute("bookQuantity", bookQuantity);
     }
 

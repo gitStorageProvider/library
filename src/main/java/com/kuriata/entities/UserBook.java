@@ -1,17 +1,16 @@
 package com.kuriata.entities;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class UserBook extends BaseEntity {
     private int userId;
     private int bookId;
-    private Date date;
+    private LocalDateTime date;
 
     public UserBook() {
     }
 
-    public UserBook(int id, int userId, int bookId, Date date) {
+    public UserBook(int id, int userId, int bookId, LocalDateTime date) {
         super(id);
         this.userId = userId;
         this.bookId = bookId;
@@ -34,11 +33,11 @@ public class UserBook extends BaseEntity {
         this.bookId = bookId;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

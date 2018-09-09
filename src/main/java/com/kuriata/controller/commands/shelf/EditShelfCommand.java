@@ -3,14 +3,13 @@ package com.kuriata.controller.commands.shelf;
 import com.kuriata.controller.commands.ICommand;
 import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.entities.Shelf;
-import com.kuriata.exceptions.DAOException;
 import com.kuriata.exceptions.ServiceException;
+import com.kuriata.exceptions.ServletException;
 import com.kuriata.services.impl.ShelfService;
 import com.kuriata.services.iservices.IShelfService;
 import com.kuriata.validators.IValidator;
 import com.kuriata.validators.Validator;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 public class EditShelfCommand implements ICommand {
@@ -53,8 +52,8 @@ public class EditShelfCommand implements ICommand {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                req.setAttribute("shelvesOperationMessage", "Shelve changed.");
-                return "/jsp/shelves.jsp";
+                req.setAttribute("operationMessage", "Shelve changed.");
+                return "/jsp/message.jsp";
             }
             //else set all entered data an return the same page
             setRequestAttributes(req);

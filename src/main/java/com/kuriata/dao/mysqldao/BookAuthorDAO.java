@@ -20,6 +20,7 @@ public class BookAuthorDAO implements IBookAuthorDAO {
     public static final String SQL_INSERT_RECORD = "INSERT INTO " + BOOK_AUTHOR_TABLE_NAME + "(book_id, author_id) VALUES (?, ?)";
     public static final String SQL_UPDATE_RECORD = "UPDATE " + BOOK_AUTHOR_TABLE_NAME + " SET book_id = ?, author_id = ? WHERE id = ?";
     public static final String SQL_DELETE_RECORD_BY_ID = "DELETE FROM " + BOOK_AUTHOR_TABLE_NAME + " WHERE id = ?";
+    public static final String SQL_DELETE_RECORD_BY_BOOK_ID = "DELETE FROM " + BOOK_AUTHOR_TABLE_NAME + " WHERE book_id = ?";
     public static final String SQL_COUNT_BOOKS_WRITTEN_BY_AUTHOR_WITH_ID = "SELECT COUNT(*) FROM " + BOOK_AUTHOR_TABLE_NAME + " WHERE author_id = ?";
     public static final String SQL_SELECT_ALL_AUTHORS_ID_BY_BOOK_ID = "SELECT author_id FROM " + BOOK_AUTHOR_TABLE_NAME + " WHERE book_id = ?";
 
@@ -113,8 +114,7 @@ public class BookAuthorDAO implements IBookAuthorDAO {
             preparedStatement.setInt(1, authorId);
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
-            int count = resultSet.getInt(1);
-            return count;
+            return resultSet.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();
             return 0;
@@ -137,5 +137,35 @@ public class BookAuthorDAO implements IBookAuthorDAO {
             e.printStackTrace();
         }
         return result;
+    }
+
+    @Override
+    public int insert(WrappedConnection wrappedConnection, BookAuthor entity) throws DAOException {
+        int result = 0;
+
+        try (PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_RECORD)) {
+            preparedStatement.setInt(1, entity.getBookId());
+            preparedStatement.setInt(2, entity.getAuthorId());
+            preparedStatement.executeUpdate();
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next())
+                    result = generatedKeys.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean deleteByBookId(WrappedConnection wrappedConnection, int bookId) throws DAOException {
+        try (PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_RECORD_BY_BOOK_ID)) {
+            preparedStatement.setInt(1, bookId);
+            int result = preparedStatement.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

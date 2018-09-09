@@ -35,7 +35,7 @@ public class BookDAO implements IBookDAO {
                         resultSet.getString("keywords")));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't extract all books from DB.", e);
         }
         return result;
     }
@@ -63,7 +63,7 @@ public class BookDAO implements IBookDAO {
     public int insert(Book book) throws DAOException {
         int result = 0;
 
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection()) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_BOOK);
             preparedStatement.setString(1, book.getShortTitle());
             preparedStatement.setString(2, book.getFullTitle());
@@ -103,6 +103,39 @@ public class BookDAO implements IBookDAO {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
             return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public int insert(WrappedConnection wrappedConnection, Book book) throws DAOException {
+        int result = 0;
+
+        try (PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_BOOK)) {
+
+            preparedStatement.setString(1, book.getShortTitle());
+            preparedStatement.setString(2, book.getFullTitle());
+            preparedStatement.setString(3, book.getDescription());
+            preparedStatement.setString(4, book.getKeyWords());
+            preparedStatement.executeUpdate();
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next())
+                    result = generatedKeys.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean deleteById(WrappedConnection wrappedConnection, int id) throws DAOException {
+        try (PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_BOOK_BY_ID)) {
+            preparedStatement.setInt(1, id);
+            int result = preparedStatement.executeUpdate();
+            return result > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
