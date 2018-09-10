@@ -1,7 +1,5 @@
 package com.kuriata.services.impl;
 
-import com.kuriata.dao.connection.AbstractConnectionFactory;
-import com.kuriata.dao.connection.WrappedConnection;
 import com.kuriata.dao.idao.IBookDAO;
 import com.kuriata.dao.idao.IShelfBookDAO;
 import com.kuriata.dao.idao.IUserBookDAO;
@@ -14,7 +12,6 @@ import com.kuriata.exceptions.DAOException;
 import com.kuriata.exceptions.ServiceException;
 import com.kuriata.services.iservices.IBookService;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +63,7 @@ public class BookService implements IBookService {
         List<UserBook> userBookList;
         try {
             userBookList = userBookDAO.findAll();
-            for(UserBook oneRecord : userBookList){
+            for (UserBook oneRecord : userBookList) {
                 Book book = bookDAO.findById(oneRecord.getBookId());
                 User user = userDAO.findById(oneRecord.getUserId());
                 result.add(new TakenBook(oneRecord, book, user));
@@ -83,7 +80,7 @@ public class BookService implements IBookService {
         List<UserBook> userBookList;
         try {
             userBookList = userBookDAO.findAllByUserId(userId);
-            for(UserBook oneRecord : userBookList){
+            for (UserBook oneRecord : userBookList) {
                 Book book = bookDAO.findById(oneRecord.getBookId());
                 User user = userDAO.findById(oneRecord.getUserId());
                 result.add(new TakenBook(oneRecord, book, user));
@@ -93,6 +90,4 @@ public class BookService implements IBookService {
         }
         return result;
     }
-
-
 }

@@ -27,12 +27,17 @@ public class CommandAccessFilter implements Filter {
             add("deleteAuthor");
             add("addShelf");
             add("editShelf");
+            add("editAuthor");
             add("deleteShelf");
             add("showAllUsers");
             add("addBook");
+            add("deleteBook");
+            add("returnBook");
         }};
         List<String> readerPermittedCommands = new ArrayList<String>() {{
             add("showTakenBooks");
+            add("takeBook");
+            add("returnBook");
         }};
         List<String> guestPermittedCommands = new ArrayList<String>() {{
             add("login");
@@ -42,13 +47,6 @@ public class CommandAccessFilter implements Filter {
             add("showAllAuthors");
             add("showAllShelves");
             add("changeLanguage");
-            //ToDo: move command bellow to adminPermitted
-            add("deleteBook");
-            //ToDo: move command bellow to readerPermitted
-            add("takeBook");
-            //ToDo: move command bellow to readerPermitted
-            add("returnBook");
-
         }};
 
         HttpSession session = ((HttpServletRequest) request).getSession();

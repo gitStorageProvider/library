@@ -1,6 +1,7 @@
 package com.kuriata.tags;
 
 import com.kuriata.entities.Author;
+import com.kuriata.helpers.MessagesProvider;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
@@ -31,8 +32,8 @@ public class AuthorsTag extends SimpleTagSupport {
             colList.add(one.getDetails());
             //if current user isAdmin (isAdmin == true), then put in result additional options
             if (isAdmin) {
-                colList.add("<a href=\"?command=deleteAuthor&authorId=" + one.getId() + "\">Delete</a>");
-                colList.add("<a href=\"?command=editAuthor&authorId=" + one.getId() + "\">Edit</a>");
+                colList.add("<a href=\"?command=deleteAuthor&authorId=" + one.getId() + "\">" + MessagesProvider.getMessage("option.delete") + "</a>");
+                colList.add("<a href=\"?command=editAuthor&authorId=" + one.getId() + "\">" + MessagesProvider.getMessage("option.edit") + "</a>");
             }
             getJspContext().setAttribute("colList", colList);
             getJspBody().invoke(null);

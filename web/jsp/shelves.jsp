@@ -1,20 +1,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<fmt:setBundle basename="text"/>
 <html>
-<head>
-    <title>Shelves</title>
-</head>
 <body>
 <c:choose>
     <c:when test="${empty shelvesList}"/>
     <c:otherwise>
         <table id="outTable">
             <thead>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Description</th>
+            <th><fmt:message key="label.tableHead.name"/></th>
+            <th><fmt:message key="label.tableHead.address"/></th>
+            <th><fmt:message key="label.tableHead.description"/></th>
                 <c:if test="${isAdmin}">
-                    <th>Option</th>
-                    <th>Option</th>
+                    <th><fmt:message key="label.tableHead.option"/></th>
+                    <th><fmt:message key="label.tableHead.option"/></th>
                 </c:if>
             </thead>
             <tbody>
@@ -33,10 +31,10 @@
                         <td>${oneShelf.description}</td>
                         <c:if test="${isAdmin == true}">
                             <td>
-                                <a href="${deleteLink}"><c:out value="delete"/></a>
+                                <a href="${deleteLink}"><fmt:message key="option.delete"/></a>
                             </td>
                             <td>
-                                <a href="${editLink}"><c:out value="edit"/></a>
+                                <a href="${editLink}"><fmt:message key="option.edit"/></a>
                             </td>
                         </c:if>
                     </tr>
@@ -47,7 +45,7 @@
 </c:choose>
 <form action="/controller" method="get">
     <input type="hidden" name="command" value="addShelf">
-    <input type="submit" value="Add new shelf">
+    <input type="submit" value="<fmt:message key="button.addShelf"/>">
 </form>
 </body>
 </html>

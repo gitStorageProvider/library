@@ -5,6 +5,7 @@ import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.entities.Shelf;
 import com.kuriata.exceptions.ServiceException;
 import com.kuriata.exceptions.ServletException;
+import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.ShelfService;
 import com.kuriata.services.iservices.IShelfService;
 import com.kuriata.validators.IValidator;
@@ -86,15 +87,15 @@ public class EditShelfCommand implements ICommand {
         boolean isDescriptionValid = true;
 
         if (!validator.isShelfeNameValid(name)) {
-            req.setAttribute("shelfNameErrorMessage", "Invalid input");
+            req.setAttribute("shelfNameErrorMessage", MessagesProvider.getMessage("message.wrongInput"));
             isNameValid = false;
         }
         if (!validator.isShelfAddressValid(address)) {
-            req.setAttribute("shelfAddressErrorMessage", "Invalid input");
+            req.setAttribute("shelfAddressErrorMessage", MessagesProvider.getMessage("message.wrongInput"));
             isAddressValid = false;
         }
         if (!validator.isAuthorDetailsValid(description)) {
-            req.setAttribute("shelfDescriptionErrorMessage", "Invalid input");
+            req.setAttribute("shelfDescriptionErrorMessage", MessagesProvider.getMessage("message.wrongInput"));
             isDescriptionValid = false;
         }
         return isNameValid && isAddressValid && isDescriptionValid;

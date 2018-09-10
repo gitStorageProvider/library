@@ -6,6 +6,8 @@ import com.kuriata.entities.Author;
 import com.kuriata.exceptions.ServletException;
 import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.AuthorService;
+import com.kuriata.validators.IValidator;
+import com.kuriata.validators.Validator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -25,8 +27,8 @@ public class AddAuthorCommand implements ICommand {
             extractRequestParameters(req);
             setRequestAttributes(req);
 
+            if(checkFields(req)){
             Author author = new Author(0, fullName, details);
-            //ToDo: check entered data and if invalid redirect to same page
             try {
                 AuthorService authorService = new AuthorService(
                         AbstractDAOFactory.getDAOFactory().getAuthorsDAO(),
@@ -36,6 +38,8 @@ public class AddAuthorCommand implements ICommand {
                 req.setAttribute("authorsOperationMessage", MessagesProvider.getMessage("message.authorAdded"));
             } catch (Exception e) {
                 e.printStackTrace();
+            }}else {
+                return "/jsp/addAuthor.jsp";
             }
         }
         return "/jsp/authors.jsp";
@@ -50,5 +54,21 @@ public class AddAuthorCommand implements ICommand {
     private void setRequestAttributes(HttpServletRequest req) {
         req.setAttribute("authorName", fullName);
         req.setAttribute("authorDetails", details);
+    }
+
+    private boolean checkFields(HttpServletRequest req) throws ServletException {
+        IValidator validator = new Validator();
+        boolean isAuthorFullNameValid = true;
+        boolean isAuthorDetailsValid = true;
+
+        if (!validator.isAuthorFullNameValid(fullName)) {
+            req.setAttribute("authorNameErrorMessage", MessagesProvider.getMessage("message.wrongInput"));
+            isAuthorFullNameValid = false;
+        }
+        if (!validator.isAuthorDetailsValid(details)) {
+            req.setAttribute("authorDetailsErrorMessage", MessagesProvider.getMessage("message.wrongInput"));
+            isAuthorDetailsValid = false;
+        }
+        return isAuthorFullNameValid && isAuthorDetailsValid;
     }
 }

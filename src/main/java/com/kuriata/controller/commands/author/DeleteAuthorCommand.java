@@ -5,6 +5,7 @@ import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.exceptions.DAOException;
 import com.kuriata.exceptions.ServiceException;
 import com.kuriata.exceptions.ServletException;
+import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.AuthorService;
 import com.kuriata.services.iservices.IAuthorService;
 
@@ -19,18 +20,17 @@ public class DeleteAuthorCommand implements ICommand {
                     AbstractDAOFactory.getDAOFactory().getAuthorsDAO(),
                     AbstractDAOFactory.getDAOFactory().getBookAuthorsDAO()
             );
-            //if author can`t be deleted - show error message and forward to same page
-            //else - delete author
             System.out.println("IS AUTHOR WITH ID=" + authorId + " USED IN DB: " + authorService.isAuthorUsed(authorId));
             if (authorService.isAuthorUsed(authorId)) {
-                req.setAttribute("authorsErrorMessage", "Author is used in DB.");
+                req.setAttribute("errorMessage", MessagesProvider.getMessage("error.authorCantBeDeleted"));
+                return "/jsp/message.jsp";
             } else {
                 authorService.deleteAuthorById(authorId);
-                req.setAttribute("authorsOperationMessage", "Author deleted.");
+                req.setAttribute("operationMessage",MessagesProvider.getMessage("message.authorDeleted"));
+                return "/jsp/message.jsp";
             }
         } catch (ServiceException e) {
-            e.printStackTrace();
+            throw new ServletException("Author not deleted.", e);
         }
-        return "/jsp/authors.jsp";
     }
 }

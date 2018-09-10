@@ -13,10 +13,10 @@ public class ChangeLanguageCommand implements ICommand {
     @Override
     public String execute(HttpServletRequest req) throws ServletException {
         selectedLocale = req.getParameter("locale");
-        req.setAttribute("newLocale", selectedLocale);
+        req.setAttribute("language", selectedLocale);
         String [] localeArray = selectedLocale.split("_");
         Locale.setDefault(new Locale(localeArray[0], localeArray[1]));
         MessagesProvider.updateLocale();
-        return "/controller?command=showAllBooks";
+        return "/controller?command=showAvailableBooks";
     }
 }

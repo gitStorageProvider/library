@@ -7,6 +7,7 @@ import com.kuriata.entities.Book;
 import com.kuriata.entities.Shelf;
 import com.kuriata.exceptions.ServiceException;
 import com.kuriata.exceptions.ServletException;
+import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.AuthorService;
 import com.kuriata.services.impl.BookManipulationService;
 import com.kuriata.services.impl.ShelfService;
@@ -64,9 +65,7 @@ public class AddBookCommand implements ICommand {
                             new Book(0, bookShortTitle, bookFullTitle, bookDescription, bookKeyWords),
                             uniqueAuthorIdList, bookQuantity, shelfId
                     );
-                    //ToDo: delete row below (it was used for debugging)
-                    req.getSession().setAttribute("PARAMS ARE", " OK!");
-                    req.setAttribute("operationMessage", "Book added.");
+                    req.setAttribute("operationMessage", MessagesProvider.getMessage("message.bookAdded"));
                     return "/jsp/message.jsp";
                 } else {
                     //if entered data is invalid - get all available authors and shelves (registered in system)
@@ -156,27 +155,27 @@ public class AddBookCommand implements ICommand {
         boolean isBookQuantityValid = true;
 
         if (!validator.isBookShortTitleValid(bookShortTitle)) {
-            req.setAttribute("bookShortTitleErrorMessage", "invalid input");
+            req.setAttribute("bookShortTitleErrorMessage", MessagesProvider.getMessage("message.wrongInput"));
             isBookShortTitleValid = false;
         }
         if (!validator.isBookFullTitleValid(bookFullTitle)) {
-            req.setAttribute("bookFullTitleErrorMessage", "invalid input");
+            req.setAttribute("bookFullTitleErrorMessage", MessagesProvider.getMessage("message.wrongInput"));
             isBookFullTitleValid = false;
         }
         if (!validator.isBookDescriptionValid(bookDescription)) {
-            req.setAttribute("bookDescriptionErrorMessage", "invalid input");
+            req.setAttribute("bookDescriptionErrorMessage", MessagesProvider.getMessage("message.wrongInput"));
             isBookDescriptionValid = false;
         }
         if (!validator.isBookKeyworsValid(bookKeyWords)) {
-            req.setAttribute("bookKeyWordsErrorMessage", "invalid input");
+            req.setAttribute("bookKeyWordsErrorMessage", MessagesProvider.getMessage("message.wrongInput"));
             isBookKeyWordsValid = false;
         }
         if (!validator.isBookAuthorsValid(uniqueAuthorIdList)) {
-            req.setAttribute("bookAuthorsErrorMessage", "invalid input");
+            req.setAttribute("bookAuthorsErrorMessage", MessagesProvider.getMessage("message.wrongInput"));
             isUniqueAuthorIdListValid = false;
         }
         if (!validator.isBookQuantityValid(bookQuantity)) {
-            req.setAttribute("bookQuantityErrorMessage", "invalid input");
+            req.setAttribute("bookQuantityErrorMessage", MessagesProvider.getMessage("message.wrongInput"));
             isBookQuantityValid = false;
         }
         return isBookShortTitleValid && isBookFullTitleValid && isBookDescriptionValid

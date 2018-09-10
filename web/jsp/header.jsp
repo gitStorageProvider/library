@@ -1,9 +1,26 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%--If the language was supplied as request parameter (by controllerCommand), then it will be set--%>
+<%--Else if the language was already previously set in the session, then stick it instead--%>
+<%--Else use the user supplied locale in the request header.--%>
+<c:set var="language" value="${not empty param.language ? param.language :
+    not empty language  ?  language :
+     pageContext.request.locale}" scope="session" />
+<c:choose>
+    <c:when test = "${language == 'ru_RU'}">
+        <fmt:setLocale value="ru_RU" scope="session" />
+    </c:when>
+    <c:when test = "${language == 'uk_UA'}">
+        <fmt:setLocale value="uk_UA" scope="session" />
+    </c:when>
+    <c:otherwise>
+        <fmt:setLocale value="en_US" scope="session" />
+    </c:otherwise>
+</c:choose>
 <fmt:setBundle basename="text"/>
-<%--<c:if test="${not empty newLocale}">--%>
-    <%--<fmt:setLocale value="${newLocale}" scope="session"/>--%>
-<%--</c:if>--%>
+
 <html>
 <head>
     <style>
@@ -11,15 +28,15 @@
     </style>
 </head>
 <body>
-<%@include file="/jsp/parametersList.jsp" %>
+<%--<%@include file="/jsp/parametersList.jsp" %>--%>
 <div style="padding-left:16px">
     <h2>
         <c:choose>
             <c:when test="${empty user}">
-                PLEASE LOG IN
+                <fmt:message key="welcome.pleaseLogin"/>
             </c:when>
             <c:otherwise>
-                YOU LOGGED IN AS: ${user.login}
+                <fmt:message key="welcome.youEntered"/> ${user.login}
             </c:otherwise>
         </c:choose>
     </h2>
@@ -49,7 +66,10 @@
         <a href="?command=showAllUsers"><fmt:message key="navigation.users"/></a>
     </c:if>
 
+    <a href="?command=changeLanguage&locale=uk_UA" style="float: right;">Uk</a>
     <a href="?command=changeLanguage&locale=ru_RU" style="float: right;">Ru</a>
+    <a href="?command=changeLanguage&locale=en_US" style="float: right;">En</a>
+
 </div>
 </body>
 </html>
