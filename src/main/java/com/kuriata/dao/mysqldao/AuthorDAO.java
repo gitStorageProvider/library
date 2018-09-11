@@ -20,6 +20,8 @@ public class AuthorDAO implements IAuthorDAO {
     public static final String SQL_INSERT_AUTHOR = "INSERT INTO " + AUTHORS_TABLE_NAME + "(full_name, details) VALUES (?, ?)";
     public static final String SQL_UPDATE_AUTHOR = "UPDATE " + AUTHORS_TABLE_NAME + " SET full_name = ?, details = ? WHERE id = ?";
     public static final String SQL_DELETE_AUTHOR_BY_ID = "DELETE FROM " + AUTHORS_TABLE_NAME + " WHERE id = ?";
+    public static final String BEGIN_SQL_FIND_AUTHOR_BY_KEYWORDS = "SELECT * FROM " + AUTHORS_TABLE_NAME + " WHERE full_name LIKE '%?%'";
+    public static final String ADDITION_SQL_FIND_AUTHOR_BY_KEYWORDS = " AND full_name LIKE '%?%'";
 
     @Override
     public List<Author> findAll() throws DAOException {
@@ -104,4 +106,35 @@ public class AuthorDAO implements IAuthorDAO {
         }
     }
 
+    @Override
+    public List<Author> findByName(String... keyWords) throws DAOException {
+        List<Author> result = new ArrayList<>();
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+            Statement statement = wrappedConnection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(generateAuthorSearchString(keyWords));
+            while (resultSet.next()) {
+                result.add(new Author(resultSet.getInt("id"),
+                        resultSet.getString("full_name"),
+                        resultSet.getString("details")));
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Can't find author(s).", e);
+        }
+        return result;
+    }
+
+    private String generateAuthorSearchString(String... keyWords) throws DAOException {
+        if (keyWords.length < 1) {
+            throw new DAOException("Less then one key word!", new IllegalArgumentException());
+        }
+        StringBuilder result = new StringBuilder();
+        for (int index = 0; index < keyWords.length; ++index) {
+            if (index == 0) {
+                result.append(BEGIN_SQL_FIND_AUTHOR_BY_KEYWORDS.replace("?", keyWords[index]));
+            } else {
+                result.append(ADDITION_SQL_FIND_AUTHOR_BY_KEYWORDS.replace("?", keyWords[index]));
+            }
+        }
+        return result.toString();
+    }
 }

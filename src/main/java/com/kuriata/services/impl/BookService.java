@@ -41,6 +41,33 @@ public class BookService implements IBookService {
     }
 
     @Override
+    public Book getBookById(int bookId) throws ServiceException {
+        try {
+            return bookDAO.findById(bookId);
+        } catch (DAOException e) {
+            throw new ServiceException("Can't get books by its id.", e);
+        }
+    }
+
+    @Override
+    public List<Book> findBooksByTitle(String... keyWords) throws ServiceException {
+        try{
+            return bookDAO.findByFullTitle(keyWords);
+        } catch (DAOException e) {
+            throw new ServiceException("Can't get find books by title.", e);
+        }
+    }
+
+    @Override
+    public List<Book> findBooksByKeywords(String... keyWords) throws ServiceException {
+        try{
+            return bookDAO.findByKeyWords(keyWords);
+        } catch (DAOException e) {
+            throw new ServiceException("Can't get find books by title.", e);
+        }
+    }
+
+    @Override
     public Map<Book, Integer> getAllAvailableBooks() throws ServiceException {
         List<Integer> availableBooksIdList;
         Map<Book, Integer> availableBooks = new HashMap<>();

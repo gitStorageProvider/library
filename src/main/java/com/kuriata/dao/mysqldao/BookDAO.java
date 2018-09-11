@@ -20,6 +20,10 @@ public class BookDAO implements IBookDAO {
     public static final String SQL_INSERT_BOOK = "INSERT INTO " + BOOKS_TABLE_NAME + "(short_title, full_title, description, keywords) VALUES (?, ?, ?, ?)";
     public static final String SQL_UPDATE_BOOK = "UPDATE " + BOOKS_TABLE_NAME + " SET short_title = ?, full_title = ?, description = ?, keywords = ? WHERE id = ?";
     public static final String SQL_DELETE_BOOK_BY_ID = "DELETE FROM " + BOOKS_TABLE_NAME + " WHERE id = ?";
+    public static final String BEGIN_SQL_FIND_BOOK_BY_TITLE_KEYWORDS = "SELECT * FROM books WHERE books.full_title LIKE '%?%'";
+    public static final String ADDITION_SQL_BOOK_FIND_BY_TITLE_KEYWORDS = " AND books.full_title LIKE '%?%'";
+    public static final String BEGIN_SQL_FIND_BOOK_BY_KEYWORDS = "SELECT * FROM books WHERE books.keywords LIKE '%?%'";
+    public static final String ADDITION_SQL_BOOK_FIND_BY_KEYWORDS = " AND books.keywords LIKE '%?%'";
 
     @Override
     public List<Book> findAll() throws DAOException {
@@ -141,4 +145,74 @@ public class BookDAO implements IBookDAO {
             return false;
         }
     }
+
+    @Override
+    public List<Book> findByFullTitle(String... keyWords) throws DAOException {
+        List<Book> result = new ArrayList<>();
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+                Statement statement = wrappedConnection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(generateTitleSearchString(keyWords));
+            while (resultSet.next()) {
+                result.add(new Book(resultSet.getInt("id"),
+                        resultSet.getString("short_title"),
+                        resultSet.getString("full_title"),
+                        resultSet.getString("description"),
+                        resultSet.getString("keywords")));
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Can't extract books from DB.", e);
+        }
+        return result;
+
+    }
+
+    @Override
+    public List<Book> findByKeyWords(String... keyWords) throws DAOException {
+        List<Book> result = new ArrayList<>();
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             Statement statement = wrappedConnection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(generateKeyworsSearchString(keyWords));
+            while (resultSet.next()) {
+                result.add(new Book(resultSet.getInt("id"),
+                        resultSet.getString("short_title"),
+                        resultSet.getString("full_title"),
+                        resultSet.getString("description"),
+                        resultSet.getString("keywords")));
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Can't extract books from DB.", e);
+        }
+        return result;
+    }
+
+    private String generateTitleSearchString(String ... keyWords) throws DAOException {
+        if(keyWords.length < 1){
+            throw new DAOException("Less then one key word!", new IllegalArgumentException());
+        }
+        StringBuilder result = new StringBuilder();
+        for(int index = 0; index < keyWords.length; ++index){
+            if(index == 0){
+                result.append(BEGIN_SQL_FIND_BOOK_BY_TITLE_KEYWORDS.replace("?", keyWords[index]));
+            }else {
+                result.append(ADDITION_SQL_BOOK_FIND_BY_TITLE_KEYWORDS.replace("?", keyWords[index]));
+            }
+        }
+        return result.toString();
+    }
+
+    private String generateKeyworsSearchString(String ... keyWords) throws DAOException {
+        if(keyWords.length < 1){
+            throw new DAOException("Less then one key word!", new IllegalArgumentException());
+        }
+        StringBuilder result = new StringBuilder();
+        for(int index = 0; index < keyWords.length; ++index){
+            if(index == 0){
+                result.append(BEGIN_SQL_FIND_BOOK_BY_KEYWORDS.replace("?", keyWords[index]));
+            }else {
+                result.append(ADDITION_SQL_BOOK_FIND_BY_KEYWORDS.replace("?", keyWords[index]));
+            }
+        }
+        return result.toString();
+    }
+
 }

@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface IBookAuthorDAO extends IDAO<BookAuthor> {
     int getWrittenBooksCountByAuthor (int authorId) throws DAOException;
+    List<Integer> getBooksIdByAuthorId(int authorId) throws DAOException;
     List<Integer> getAuthorsIdByBookId(int bookId) throws DAOException;
     //method used in transactions (while add new Book to the system)
     int insert(WrappedConnection wrappedConnection, BookAuthor entity) throws DAOException;

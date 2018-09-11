@@ -70,7 +70,7 @@
 
         <label for="bookQuantity"><fmt:message key="label.newBook.bookQuantity"/></label>
         <input type="text" id="bookQuantity" name="bookQuantity" placeholder="<fmt:message key="hint.bookQuantity"/>"
-               value="${bookDescription}">
+               value="${bookQuantity}">
         <label class="wrong-input">${bookQuantityErrorMessage}</label>
         <input type="submit" value="register">
     </form>

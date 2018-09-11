@@ -3,15 +3,12 @@ package com.kuriata.controller.commands.author;
 import com.kuriata.controller.commands.ICommand;
 import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.entities.Author;
-import com.kuriata.exceptions.DAOException;
 import com.kuriata.exceptions.ServiceException;
 import com.kuriata.services.impl.AuthorService;
-import com.sun.deploy.net.HttpResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class ShowAllAuthorsCommand implements ICommand {
 
@@ -32,7 +29,7 @@ public class ShowAllAuthorsCommand implements ICommand {
                     AbstractDAOFactory.getDAOFactory().getAuthorsDAO(),
                     AbstractDAOFactory.getDAOFactory().getBookAuthorsDAO()
             );
-            authorList = authorService.getAllAuthors();
+            authorList = authorService.findAllAuthors();
         } catch (ServiceException e) {
             e.printStackTrace();
         }

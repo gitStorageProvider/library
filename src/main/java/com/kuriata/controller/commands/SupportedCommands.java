@@ -74,6 +74,9 @@ public enum SupportedCommands {
     }},
     CHANGE_LANGUAGE("changeLanguage") {{
         this.command = new ChangeLanguageCommand();
+    }},
+    FIND_BOOKS("findBooks") {{
+        this.command = new FindBooksCommand();
     }};
 
     private SupportedCommands(String commandName) {

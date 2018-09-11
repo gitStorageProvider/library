@@ -20,7 +20,7 @@ public class AuthorService implements IAuthorService {
     }
 
     @Override
-    public List<Author> getAllAuthors() throws ServiceException {
+    public List<Author> findAllAuthors() throws ServiceException {
         List<Author> result = new ArrayList<>();
         try {
             result = authorDAO.findAll();
@@ -32,7 +32,7 @@ public class AuthorService implements IAuthorService {
     }
 
     @Override
-    public List<Author> getAllAuthorsByBookId(int bookId) throws ServiceException {
+    public List<Author> findAllAuthorsByBookId(int bookId) throws ServiceException {
         List<Integer> authorsIdList = new ArrayList<>();
         List<Author> result = new ArrayList<>();
         try {
@@ -45,6 +45,24 @@ public class AuthorService implements IAuthorService {
             throw new ServiceException("All authors not retrieved successfully.", e);
         }
         return result;
+    }
+
+    @Override
+    public List<Author> findAuthorByName(String... keyWords) throws ServiceException {
+        try{
+            return authorDAO.findByName(keyWords);
+        } catch (DAOException e) {
+            throw new ServiceException("Can't find author(s) by name.", e);
+        }
+    }
+
+    @Override
+    public List<Integer> findBooksIdByAuthorId(int authorId) throws ServiceException {
+        try{
+            return bookAuthorDAO.getBooksIdByAuthorId(authorId);
+        } catch (DAOException e) {
+            throw new ServiceException("Can't extract books id by author id.", e);
+        }
     }
 
     @Override

@@ -28,7 +28,7 @@
     </style>
 </head>
 <body>
-<%--<%@include file="/jsp/parametersList.jsp" %>--%>
+<%@include file="/jsp/parametersList.jsp" %>
 <div style="padding-left:16px">
     <h2>
         <c:choose>
@@ -55,6 +55,7 @@
     <a href="?command=showAvailableBooks"><fmt:message key="navigation.availableBooks"/></a>
     <a href="?command=showAllAuthors"><fmt:message key="navigation.authors"/></a>
     <a href="?command=showAllShelves"><fmt:message key="navigation.shelves"/></a>
+    <a href="?command=findBooks"><fmt:message key="navigation.findBook"/></a>
 
     <c:if test="${isReader}">
         <a href="?command=showTakenBooks"><fmt:message key="navigation.takenBooks"/></a>

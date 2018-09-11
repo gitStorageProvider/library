@@ -45,7 +45,7 @@ public class AddBookCommand implements ICommand {
                     AbstractDAOFactory.getDAOFactory().getBookAuthorsDAO()
             );
             //get all available authors and shelves (registered in system)
-            authorList = authorService.getAllAuthors();
+            authorList = authorService.findAllAuthors();
             shelvesList = shelfService.getAllShelves();
             if (requestMethodName.equalsIgnoreCase("GET")) {
                 req.setAttribute("authorsList", authorList);
@@ -70,7 +70,7 @@ public class AddBookCommand implements ICommand {
                 } else {
                     //if entered data is invalid - get all available authors and shelves (registered in system)
                     //put them into request and show the same page
-                    authorList = authorService.getAllAuthors();
+                    authorList = authorService.findAllAuthors();
                     shelvesList = shelfService.getAllShelves();
                     req.setAttribute("authorsList", authorList);
                     req.setAttribute("shelvesList", shelvesList);

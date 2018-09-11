@@ -83,6 +83,10 @@ div {
     text-align: right;
 }
 
+.radioButtorn{
+    width: auto;
+}
+
 #outTable {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
