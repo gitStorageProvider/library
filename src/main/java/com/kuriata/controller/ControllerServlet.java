@@ -34,7 +34,6 @@ public class ControllerServlet extends HttpServlet {
             e.printStackTrace();
         }
         if (page != null) {
-            System.out.println("Computed page = " + page);
             RequestDispatcher dispatcher =
                     getServletContext().getRequestDispatcher(page);
             dispatcher.forward(req, resp);

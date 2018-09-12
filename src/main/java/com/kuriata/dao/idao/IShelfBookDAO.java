@@ -20,6 +20,6 @@ public interface IShelfBookDAO extends IDAO<ShelfBook> {
     boolean deleteByBookId(WrappedConnection wrappedConnection, int bookId) throws DAOException;
 
     //method used in transactions (while User takes/returns Book)
-    boolean updateQuantityByBookId(WrappedConnection wrappedConnection, int quantity, int bookId);
+    boolean updateQuantityByBookId(WrappedConnection wrappedConnection, int quantity, int bookId) throws DAOException;
 
 }

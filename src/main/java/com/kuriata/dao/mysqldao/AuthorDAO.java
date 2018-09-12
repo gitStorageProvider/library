@@ -120,9 +120,10 @@ public class AuthorDAO implements IAuthorDAO {
     @Override
     public List<Author> findByName(String... keyWords) throws DAOException {
         List<Author> result = new ArrayList<>();
+        ResultSet resultSet = null;
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
              Statement statement = wrappedConnection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(generateAuthorSearchString(keyWords));
+            resultSet = statement.executeQuery(generateAuthorSearchString(keyWords));
             while (resultSet.next()) {
                 result.add(new Author(resultSet.getInt("id"),
                         resultSet.getString("full_name"),
@@ -130,6 +131,12 @@ public class AuthorDAO implements IAuthorDAO {
             }
         } catch (SQLException e) {
             throw new DAOException("Can't find author(s).", e);
+        }finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }

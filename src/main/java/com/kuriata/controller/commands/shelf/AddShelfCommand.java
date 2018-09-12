@@ -37,7 +37,7 @@ public class AddShelfCommand implements ICommand {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                req.setAttribute("operationMessage", "Shelve added.");
+                req.setAttribute("operationMessage", MessagesProvider.getMessage("message.shelfAdded"));
                 return "/jsp/message.jsp";
             }
             //else set (in checkFields() method) error messages an return the same page

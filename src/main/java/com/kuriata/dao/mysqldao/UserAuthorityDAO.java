@@ -3,7 +3,6 @@ package com.kuriata.dao.mysqldao;
 import com.kuriata.dao.connection.AbstractConnectionFactory;
 import com.kuriata.dao.connection.WrappedConnection;
 import com.kuriata.dao.idao.IUserAuthorityDAO;
-import com.kuriata.entities.Authority;
 import com.kuriata.entities.UserAuthority;
 import com.kuriata.exceptions.DAOException;
 
@@ -27,17 +26,23 @@ public class UserAuthorityDAO implements IUserAuthorityDAO {
     @Override
     public List<UserAuthority> findAll() throws DAOException {
         List<UserAuthority> result = new ArrayList<>();
-
+        ResultSet resultSet = null;
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             Statement statement = wrappedConnection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_RECORDS);
+            resultSet = statement.executeQuery(SQL_SELECT_ALL_RECORDS);
             while (resultSet.next()) {
                 result.add(new UserAuthority(resultSet.getInt("id"),
                         resultSet.getInt("user_id"),
                         resultSet.getInt("authority_id")));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't extract all entities from DB.", e);
+        }finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }
@@ -45,17 +50,24 @@ public class UserAuthorityDAO implements IUserAuthorityDAO {
     @Override
     public UserAuthority findById(int id) throws DAOException {
         UserAuthority result = null;
+        ResultSet resultSet = null;
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_SELECT_RECORD_BY_ID);
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 result = new UserAuthority(resultSet.getInt("id"),
                         resultSet.getInt("user_id"),
                         resultSet.getInt("authority_id"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't find entity by id.", e);
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }
@@ -64,8 +76,8 @@ public class UserAuthorityDAO implements IUserAuthorityDAO {
     public int insert(UserAuthority entity) throws DAOException {
         int result = 0;
 
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_RECORD);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_RECORD)) {
             preparedStatement.setInt(1, entity.getUserId());
             preparedStatement.setInt(2,entity.getAuthorityId());
             preparedStatement.executeUpdate();
@@ -74,68 +86,71 @@ public class UserAuthorityDAO implements IUserAuthorityDAO {
                     result = generatedKeys.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't insert entity.", e);
         }
         return result;
     }
 
     @Override
     public boolean update(UserAuthority entity) throws DAOException {
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_RECORD);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_RECORD);) {
             preparedStatement.setInt(1, entity.getUserId());
             preparedStatement.setInt(2, entity.getAuthorityId());
             preparedStatement.setInt(3, entity.getId());
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new DAOException("Can't update entity.", e);
         }
     }
 
     @Override
     public boolean deleteById(int id) throws DAOException {
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_RECORD_BY_ID);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_RECORD_BY_ID);) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new DAOException("Can't delete entity.", e);
         }
     }
 
     @Override
     public List<UserAuthority> findAllByUserId(int userId) throws DAOException{
         List<UserAuthority> result = new ArrayList<>();
-
+        ResultSet resultSet = null;
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_SELECT_ALL_RECORDS_BY_USER_ID);
             preparedStatement.setInt(1, userId);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 result.add(new UserAuthority(resultSet.getInt("id"),
                         resultSet.getInt("user_id"),
                         resultSet.getInt("authority_id")));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't find entities.", e);
+        }finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }
 
     @Override
     public boolean deleteByUserId(int userId) throws DAOException {
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_RECORD_BY_USER_ID);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_RECORD_BY_USER_ID)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new DAOException("Can't delete entities.", e);
         }
     }
 }

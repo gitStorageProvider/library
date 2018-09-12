@@ -25,9 +25,10 @@ public class UserDAO implements IUserDAO {
     @Override
     public List<User> findAll() throws DAOException {
         List<User> result = new ArrayList<>();
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            Statement statement = wrappedConnection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_USERS);
+        ResultSet resultSet = null;
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             Statement statement = wrappedConnection.createStatement()) {
+            resultSet = statement.executeQuery(SQL_SELECT_ALL_USERS);
             while (resultSet.next()) {
                 result.add(new User(resultSet.getInt("id"),
                         resultSet.getString("login"),
@@ -38,7 +39,13 @@ public class UserDAO implements IUserDAO {
                         resultSet.getString("phone")));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't extract all entities from DB.", e);
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }
@@ -46,10 +53,11 @@ public class UserDAO implements IUserDAO {
     @Override
     public User findById(int id) throws DAOException {
         User result = null;
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_SELECT_USER_BY_ID);
+        ResultSet resultSet = null;
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_SELECT_USER_BY_ID)) {
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 result = new User(resultSet.getInt("id"),
                         resultSet.getString("login"),
@@ -60,8 +68,13 @@ public class UserDAO implements IUserDAO {
                         resultSet.getString("phone"));
             }
         } catch (SQLException e) {
-//            e.printStackTrace();
-            throw new DAOException("Can't retrieve user by id", e);
+            throw new DAOException("Can't find entity by id.", e);
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }
@@ -69,8 +82,8 @@ public class UserDAO implements IUserDAO {
     public int insert(User user) throws DAOException {
         int result = 0;
 
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_USER);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_USER)) {
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getEmail());
@@ -83,50 +96,48 @@ public class UserDAO implements IUserDAO {
                     result = generatedKeys.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't insert entity.", e);
         }
         return result;
     }
 
     public boolean update(User user) throws DAOException {
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_USER);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_USER)) {
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, user.getFirstName());
             preparedStatement.setString(5, user.getLastName());
             preparedStatement.setString(6, user.getPhone());
-            ;
             preparedStatement.setInt(7, user.getId());
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new DAOException("Can't update entity.", e);
         }
     }
 
     @Override
     public boolean deleteById(int id) throws DAOException {
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_USER_BY_ID);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_USER_BY_ID)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't delete entity.", e);
         }
-        return false;
     }
 
     @Override
     public User findByLogin(String userLogin) throws DAOException {
         User result = null;
+        ResultSet resultSet = null;
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_FIND_BY_LOGIN);
             preparedStatement.setString(1, userLogin);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 result = new User(resultSet.getInt("id"),
                         resultSet.getString("login"),
@@ -137,7 +148,13 @@ public class UserDAO implements IUserDAO {
                         resultSet.getString("phone"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't extract user by login.", e);
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }
@@ -145,15 +162,22 @@ public class UserDAO implements IUserDAO {
     @Override
     public boolean loginNotRegistered(String userLogin) throws DAOException {
         boolean result = false;
+        ResultSet resultSet = null;
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_FIND_BY_LOGIN);
             preparedStatement.setString(1, userLogin);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()) {
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
                 return result;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't check is login registered or not.", e);
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         result = true;
         return result;

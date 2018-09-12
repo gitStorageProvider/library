@@ -3,6 +3,7 @@ package com.kuriata.controller.commands.user;
 import com.kuriata.controller.commands.ICommand;
 import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.exceptions.ServletException;
+import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.UserService;
 import com.kuriata.services.iservices.IUserService;
 
@@ -20,14 +21,14 @@ public class DeleteUserCommand implements ICommand {
                     AbstractDAOFactory.getDAOFactory().getAuthorityDAO()
             );
             if (userService.isUserUsed(userId)) {
-                req.setAttribute("usersErrorMessage", "Used is used in DB.");
+                req.setAttribute("errorMessage", MessagesProvider.getMessage("error.userCantBeDeleted"));
             } else {
                 userService.deleteByID(userId);
-                req.setAttribute("usersOperationMessage", "User deleted.");
+                req.setAttribute("operationMessage", MessagesProvider.getMessage("message.userDeleted"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "/jsp/users.jsp";
+        return "/jsp/message.jsp";
     }
 }

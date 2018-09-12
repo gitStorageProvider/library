@@ -30,10 +30,10 @@ public class ShelfBookDAO implements IShelfBookDAO {
     @Override
     public List<ShelfBook> findAll() throws DAOException {
         List<ShelfBook> result = new ArrayList<>();
-
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            Statement statement = wrappedConnection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_RECORDS);
+        ResultSet resultSet = null;
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             Statement statement = wrappedConnection.createStatement()) {
+            resultSet = statement.executeQuery(SQL_SELECT_ALL_RECORDS);
             while (resultSet.next()) {
                 result.add(new ShelfBook(resultSet.getInt("id"),
                         resultSet.getInt("shelf_id"),
@@ -41,7 +41,13 @@ public class ShelfBookDAO implements IShelfBookDAO {
                         resultSet.getInt("quantity")));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't extract all entities from DB.", e);
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }
@@ -49,10 +55,11 @@ public class ShelfBookDAO implements IShelfBookDAO {
     @Override
     public ShelfBook findById(int id) throws DAOException {
         ShelfBook result = null;
+        ResultSet resultSet = null;
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_SELECT_RECORD_BY_ID);
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 result = new ShelfBook(resultSet.getInt("id"),
                         resultSet.getInt("shelf_id"),
@@ -60,7 +67,13 @@ public class ShelfBookDAO implements IShelfBookDAO {
                         resultSet.getInt("quantity"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't find entity by id.", e);
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }
@@ -69,8 +82,8 @@ public class ShelfBookDAO implements IShelfBookDAO {
     public int insert(ShelfBook entity) throws DAOException {
         int result = 0;
 
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_RECORD);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_RECORD);) {
             preparedStatement.setInt(1, entity.getShelfId());
             preparedStatement.setInt(2, entity.getBookId());
             preparedStatement.setInt(3, entity.getQuantity());
@@ -80,15 +93,15 @@ public class ShelfBookDAO implements IShelfBookDAO {
                     result = generatedKeys.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't insert entity.", e);
         }
         return result;
     }
 
     @Override
     public boolean update(ShelfBook entity) throws DAOException {
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_RECORD);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_RECORD);) {
             preparedStatement.setInt(1, entity.getShelfId());
             preparedStatement.setInt(2, entity.getBookId());
             preparedStatement.setInt(3, entity.getQuantity());
@@ -96,65 +109,81 @@ public class ShelfBookDAO implements IShelfBookDAO {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new DAOException("Can't update entity.", e);
         }
     }
 
     @Override
     public boolean deleteById(int id) throws DAOException {
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_RECORD_BY_ID);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_RECORD_BY_ID);) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new DAOException("Can't delete entity.", e);
         }
     }
 
     @Override
     public List<Integer> findAvailableBooksId() throws DAOException {
         List<Integer> result = new ArrayList<>();
-
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            Statement statement = wrappedConnection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_ID_OF_AVAILABLE_BOOKS);
+        ResultSet resultSet = null;
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             Statement statement = wrappedConnection.createStatement();) {
+            resultSet = statement.executeQuery(SQL_SELECT_ALL_ID_OF_AVAILABLE_BOOKS);
             while (resultSet.next()) {
                 result.add(new Integer(resultSet.getInt("book_id")));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't find all available books.", e);
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }
 
     @Override
     public int booksCountOnShelfWithId(int shelfId) throws DAOException {
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_COUNT_BOOKS_ON_SHELF_WITH_ID);
+        ResultSet resultSet = null;
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_COUNT_BOOKS_ON_SHELF_WITH_ID);) {
             preparedStatement.setInt(1, shelfId);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             resultSet.next();
             return resultSet.getInt(1);
         } catch (SQLException e) {
-            e.printStackTrace();
-            return 0;
+            throw new DAOException("Can't cont books on shelf.", e);
+        }finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
     }
 
     @Override
     public int booksQuantityByBookId(int bookId) throws DAOException {
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_COUNT_QUANTITY_OF_BOOKS_WITH_ID);
+        ResultSet resultSet = null;
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_COUNT_QUANTITY_OF_BOOKS_WITH_ID);) {
             preparedStatement.setInt(1, bookId);
-            ResultSet resultSet = preparedStatement.executeQuery();
+             resultSet = preparedStatement.executeQuery();
             resultSet.next();
             return resultSet.getInt("quantity");
         } catch (SQLException e) {
-            e.printStackTrace();
-            return 0;
+            throw new DAOException("Can't get boos quantity.", e);
+        }finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
     }
 
@@ -172,7 +201,7 @@ public class ShelfBookDAO implements IShelfBookDAO {
                     result = generatedKeys.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't insert entity.", e);
         }
         return result;
     }
@@ -184,21 +213,19 @@ public class ShelfBookDAO implements IShelfBookDAO {
             int result = preparedStatement.executeUpdate();
             return result > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new DAOException("Can't delete entity.", e);
         }
     }
 
     @Override
-    public boolean updateQuantityByBookId(WrappedConnection wrappedConnection, int quantity, int bookId) {
+    public boolean updateQuantityByBookId(WrappedConnection wrappedConnection, int quantity, int bookId) throws DAOException {
         try (PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_QUANTITY_BY_BOOK_ID)) {
             preparedStatement.setInt(1, quantity);
             preparedStatement.setInt(2, bookId);
             int result = preparedStatement.executeUpdate();
             return result > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new DAOException("Can't update entity.", e);
         }
     }
 }

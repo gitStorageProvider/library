@@ -6,6 +6,7 @@ import com.kuriata.entities.User;
 import com.kuriata.exceptions.DAOException;
 import com.kuriata.exceptions.ServiceException;
 import com.kuriata.exceptions.ServletException;
+import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.UserService;
 import com.kuriata.services.iservices.IUserService;
 import com.kuriata.validators.IValidator;
@@ -13,6 +14,7 @@ import com.kuriata.validators.Validator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.security.MessageDigest;
 
 public class RegisterCommand implements ICommand {
     private String login;
@@ -42,8 +44,9 @@ public class RegisterCommand implements ICommand {
                     );
                     userService.registerNewUser(
                             new User(0, login, password, email, firstName, lastName, phone));
+                    req.setAttribute("operationMessage", MessagesProvider.getMessage("message.userAdded"));
                 } catch (ServiceException e) {
-                    e.printStackTrace();
+                    throw new ServletException("Can't register new user in system.", e);
                 }
                 return "/controller?command=login";
             } else {

@@ -28,9 +28,10 @@ public class BookDAO implements IBookDAO {
     @Override
     public List<Book> findAll() throws DAOException {
         List<Book> result = new ArrayList<>();
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            Statement statement = wrappedConnection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_BOOKS);
+        ResultSet resultSet = null;
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             Statement statement = wrappedConnection.createStatement();) {
+            resultSet = statement.executeQuery(SQL_SELECT_ALL_BOOKS);
             while (resultSet.next()) {
                 result.add(new Book(resultSet.getInt("id"),
                         resultSet.getString("short_title"),
@@ -40,6 +41,12 @@ public class BookDAO implements IBookDAO {
             }
         } catch (SQLException e) {
             throw new DAOException("Can't extract all books from DB.", e);
+        }finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }
@@ -47,10 +54,11 @@ public class BookDAO implements IBookDAO {
     @Override
     public Book findById(int id) throws DAOException {
         Book result = null;
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_SELECT_BOOK_BY_ID);
+        ResultSet resultSet =null;
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_SELECT_BOOK_BY_ID);) {
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 result = new Book(resultSet.getInt("id"),
                         resultSet.getString("short_title"),
@@ -59,7 +67,13 @@ public class BookDAO implements IBookDAO {
                         resultSet.getString("keywords"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't find entity by id.", e);
+        }finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }
@@ -67,8 +81,8 @@ public class BookDAO implements IBookDAO {
     public int insert(Book book) throws DAOException {
         int result = 0;
 
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection()) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_BOOK);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_BOOK)) {
             preparedStatement.setString(1, book.getShortTitle());
             preparedStatement.setString(2, book.getFullTitle());
             preparedStatement.setString(3, book.getDescription());
@@ -79,14 +93,14 @@ public class BookDAO implements IBookDAO {
                     result = generatedKeys.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't insert entity.", e);
         }
         return result;
     }
 
     public boolean update(Book book) throws DAOException {
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_BOOK);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_BOOK);) {
             preparedStatement.setString(1, book.getShortTitle());
             preparedStatement.setString(2, book.getFullTitle());
             preparedStatement.setString(3, book.getDescription());
@@ -95,21 +109,19 @@ public class BookDAO implements IBookDAO {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new DAOException("Can't update entity.", e);
         }
     }
 
     @Override
     public boolean deleteById(int id) throws DAOException {
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_BOOK_BY_ID);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_BOOK_BY_ID)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new DAOException("Can't delete entity.", e);
         }
     }
 
@@ -129,7 +141,7 @@ public class BookDAO implements IBookDAO {
                     result = generatedKeys.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't insert entity.", e);
         }
         return result;
     }
@@ -141,17 +153,17 @@ public class BookDAO implements IBookDAO {
             int result = preparedStatement.executeUpdate();
             return result > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new DAOException("Can't delete entity.", e);
         }
     }
 
     @Override
     public List<Book> findByFullTitle(String... keyWords) throws DAOException {
         List<Book> result = new ArrayList<>();
+        ResultSet resultSet = null;
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
                 Statement statement = wrappedConnection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(generateTitleSearchString(keyWords));
+            resultSet = statement.executeQuery(generateTitleSearchString(keyWords));
             while (resultSet.next()) {
                 result.add(new Book(resultSet.getInt("id"),
                         resultSet.getString("short_title"),
@@ -161,6 +173,12 @@ public class BookDAO implements IBookDAO {
             }
         } catch (SQLException e) {
             throw new DAOException("Can't extract books from DB.", e);
+        }finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
 
@@ -169,9 +187,10 @@ public class BookDAO implements IBookDAO {
     @Override
     public List<Book> findByKeyWords(String... keyWords) throws DAOException {
         List<Book> result = new ArrayList<>();
+        ResultSet resultSet = null;
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
              Statement statement = wrappedConnection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(generateKeyworsSearchString(keyWords));
+             resultSet = statement.executeQuery(generateKeyworsSearchString(keyWords));
             while (resultSet.next()) {
                 result.add(new Book(resultSet.getInt("id"),
                         resultSet.getString("short_title"),
@@ -181,6 +200,12 @@ public class BookDAO implements IBookDAO {
             }
         } catch (SQLException e) {
             throw new DAOException("Can't extract books from DB.", e);
+        }finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }

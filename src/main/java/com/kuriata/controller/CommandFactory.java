@@ -14,9 +14,7 @@ public class CommandFactory {
 
     public ICommand defineCommand(HttpServletRequest req) {
         ICommand resultCommand = new DefaultCommand();
-
         String commandString = req.getParameter("command");
-        System.out.println("Command: " + commandString);
 
         if (commandString == null || commandString.isEmpty()) {
             return resultCommand;
@@ -29,7 +27,6 @@ public class CommandFactory {
                     break;
                 }
             }
-            System.out.println("CommandFactory result: " + resultCommand);
         } catch (IllegalArgumentException e) {
 
         }

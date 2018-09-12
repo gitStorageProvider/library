@@ -53,7 +53,7 @@ public class EditShelfCommand implements ICommand {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                req.setAttribute("operationMessage", "Shelve changed.");
+                req.setAttribute("operationMessage", MessagesProvider.getMessage("message.shelfChanged"));
                 return "/jsp/message.jsp";
             }
             //else set all entered data an return the same page

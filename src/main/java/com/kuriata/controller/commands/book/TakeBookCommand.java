@@ -7,6 +7,7 @@ import com.kuriata.entities.TakenBook;
 import com.kuriata.entities.User;
 import com.kuriata.exceptions.ServiceException;
 import com.kuriata.exceptions.ServletException;
+import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.BookManipulationService;
 import com.kuriata.services.impl.BookService;
 import com.kuriata.services.iservices.IBookService;
@@ -37,17 +38,16 @@ public class TakeBookCommand implements ICommand {
         try {
             if(bookManipulationService.isBookAllreadyTakenByUser(bookId, currentUser.getId())
                     || bookManipulationService.getBookQuantity(bookId)<= 0){
-                req.setAttribute("errorMessage", "Book can't be taken.");
+                req.setAttribute("errorMessage", MessagesProvider.getMessage("error.bookCantBeTaken"));
                 return "/jsp/message.jsp";
             }else {
                 bookManipulationService.setBookTakenByUser(bookId, currentUser.getId());
-                req.setAttribute("operationMessage", "Book taken.");
+                req.setAttribute("operationMessage", MessagesProvider.getMessage("message.bookTaken"));
                 return "/jsp/message.jsp";
             }
 
         } catch (ServiceException e) {
-            e.printStackTrace();
+            throw new ServletException("Can't set book taken by user.", e);
         }
-        return null;
     }
 }

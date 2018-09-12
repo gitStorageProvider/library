@@ -1,7 +1,5 @@
 package com.kuriata;
 
-import com.kuriata.exceptions.DAOException;
-
 import java.sql.*;
 
 public class DAOTester {
@@ -44,7 +42,7 @@ public class DAOTester {
                 while (rs.next()) {
                     //Retrieve by column name
                     String full_name = rs.getString("full_name");
-                    String country = rs.getString("country");
+                    String country = rs.getString("details");
 
                     //Display values
 
@@ -75,11 +73,9 @@ public class DAOTester {
                     se.printStackTrace();
                 }//end finally try
             }//end try
-            System.out.println("Goodbye!");
-        }
-        finally {
+            System.out.println("END!");
+        } finally {
             //end main
         }
-//end FirstExample
-    }   
+    }
 }

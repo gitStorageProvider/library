@@ -25,7 +25,6 @@ public class AuthorService implements IAuthorService {
         try {
             result = authorDAO.findAll();
         } catch (DAOException e) {
-            e.printStackTrace();
             throw new ServiceException("All authors not retrieved successfully.", e);
         }
         return result;

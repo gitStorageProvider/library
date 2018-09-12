@@ -3,6 +3,7 @@ package com.kuriata.controller.commands.shelf;
 import com.kuriata.controller.commands.ICommand;
 import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.exceptions.ServletException;
+import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.ShelfService;
 import com.kuriata.services.iservices.IShelfService;
 
@@ -17,17 +18,15 @@ public class DeleteShelfCommand implements ICommand {
                     AbstractDAOFactory.getDAOFactory().getShelfsDAO(),
                     AbstractDAOFactory.getDAOFactory().getShelfBookDAO()
             );
-            System.out.println("IS SHELF WITH ID=" + shelfId + " USED IN DB: " + shelfService.isShelfUsed(shelfId));
             if(shelfService.isShelfUsed(shelfId)){
-                req.setAttribute("shelvesErrorMessage", "Shelf is used in DB.");
+                req.setAttribute("errorMessage", MessagesProvider.getMessage("error.shelfCantBeDeleted"));
             } else {
                 shelfService.deleteShelfById(shelfId);
-                System.out.println("helfService.deleteShelfById(shelfId) called!!!!");
-                req.setAttribute("shelvesOperationMessage", "Shelf deleted.");
+                req.setAttribute("operationMessage", MessagesProvider.getMessage("message.shelfDeleted"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "/jsp/shelves.jsp";
+        return "/jsp/message.jsp";
     }
 }

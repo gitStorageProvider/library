@@ -4,6 +4,7 @@ import com.kuriata.controller.commands.ICommand;
 import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.exceptions.ServiceException;
 import com.kuriata.exceptions.ServletException;
+import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.BookManipulationService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,11 +26,11 @@ public class DeleteBookCommand implements ICommand {
         );
         try {
             if (bookManipulationService.isBookTaken(bookId)) {
-                req.setAttribute("errorMessage", "Book is taken by user(s).");
+                req.setAttribute("errorMessage", MessagesProvider.getMessage("error.bookCantBeDeleted"));
                 return "/jsp/message.jsp";
             }
             bookManipulationService.deleteBookFromLibrary(bookId);
-            req.setAttribute("operationMessage", "Book deleted.");
+            req.setAttribute("operationMessage", MessagesProvider.getMessage("message.bookDeleted"));
             return "/jsp/message.jsp";
         } catch (ServiceException e) {
             throw new ServletException("Can't delete book.", e);

@@ -20,7 +20,6 @@ public class DeleteAuthorCommand implements ICommand {
                     AbstractDAOFactory.getDAOFactory().getAuthorsDAO(),
                     AbstractDAOFactory.getDAOFactory().getBookAuthorsDAO()
             );
-            System.out.println("IS AUTHOR WITH ID=" + authorId + " USED IN DB: " + authorService.isAuthorUsed(authorId));
             if (authorService.isAuthorUsed(authorId)) {
                 req.setAttribute("errorMessage", MessagesProvider.getMessage("error.authorCantBeDeleted"));
                 return "/jsp/message.jsp";

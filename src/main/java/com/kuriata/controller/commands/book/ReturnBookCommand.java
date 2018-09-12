@@ -4,7 +4,9 @@ import com.kuriata.controller.commands.ICommand;
 import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.exceptions.ServiceException;
 import com.kuriata.exceptions.ServletException;
+import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.BookManipulationService;
+import sun.plugin2.message.Message;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,10 +26,10 @@ public class ReturnBookCommand implements ICommand {
         );
         try {
             if(bookManipulationService.returnBook(recordId)){
-                req.setAttribute("operationMessage", "Book returned.");
+                req.setAttribute("operationMessage", MessagesProvider.getMessage("message.bookReturned"));
                 return "/jsp/message.jsp";
             }else {
-                req.setAttribute("errorMessage", "Book can't be returned.");
+                req.setAttribute("errorMessage", MessagesProvider.getMessage("error.bookCantBeReturned"));
                 return "/jsp/message.jsp";
             }
         } catch (ServiceException e) {
