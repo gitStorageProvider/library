@@ -6,7 +6,6 @@ import com.kuriata.entities.Author;
 import com.kuriata.entities.Book;
 import com.kuriata.entities.Shelf;
 import com.kuriata.exceptions.ServiceException;
-import com.kuriata.exceptions.ServletException;
 import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.AuthorService;
 import com.kuriata.services.impl.BookManipulationService;
@@ -16,6 +15,7 @@ import com.kuriata.services.iservices.IShelfService;
 import com.kuriata.validators.IValidator;
 import com.kuriata.validators.Validator;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -78,9 +78,8 @@ public class AddBookCommand implements ICommand {
                 }
             }
         } catch (ServiceException e) {
-            e.printStackTrace();
+            throw new ServletException("Can't execute command", e);
         }
-        return null;
     }
 
     private void extractRequestParameters(HttpServletRequest req) {

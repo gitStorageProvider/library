@@ -5,14 +5,13 @@ import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.entities.Authority;
 import com.kuriata.entities.User;
 import com.kuriata.exceptions.ServiceException;
-import com.kuriata.exceptions.ServletException;
 import com.kuriata.services.impl.UserService;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class LoginCommand implements ICommand {
-    //ToDo: realize method below
     @Override
     public String execute(HttpServletRequest req) throws ServletException {
         String requestMethodName = req.getMethod();

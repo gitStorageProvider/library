@@ -1,8 +1,8 @@
 package com.kuriata.controller.commands.user;
 
 import com.kuriata.controller.commands.ICommand;
-import com.kuriata.exceptions.ServletException;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Enumeration;

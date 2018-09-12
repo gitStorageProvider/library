@@ -2,20 +2,14 @@ package com.kuriata.controller.commands.book;
 
 import com.kuriata.controller.commands.ICommand;
 import com.kuriata.dao.daofactory.AbstractDAOFactory;
-import com.kuriata.entities.Book;
-import com.kuriata.entities.TakenBook;
 import com.kuriata.entities.User;
 import com.kuriata.exceptions.ServiceException;
-import com.kuriata.exceptions.ServletException;
 import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.BookManipulationService;
-import com.kuriata.services.impl.BookService;
-import com.kuriata.services.iservices.IBookService;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Map;
 
 public class TakeBookCommand implements ICommand {
 
@@ -36,11 +30,11 @@ public class TakeBookCommand implements ICommand {
                 AbstractDAOFactory.getDAOFactory().getBookAuthorsDAO()
         );
         try {
-            if(bookManipulationService.isBookAllreadyTakenByUser(bookId, currentUser.getId())
-                    || bookManipulationService.getBookQuantity(bookId)<= 0){
+            if (bookManipulationService.isBookAllreadyTakenByUser(bookId, currentUser.getId())
+                    || bookManipulationService.getBookQuantity(bookId) <= 0) {
                 req.setAttribute("errorMessage", MessagesProvider.getMessage("error.bookCantBeTaken"));
                 return "/jsp/message.jsp";
-            }else {
+            } else {
                 bookManipulationService.setBookTakenByUser(bookId, currentUser.getId());
                 req.setAttribute("operationMessage", MessagesProvider.getMessage("message.bookTaken"));
                 return "/jsp/message.jsp";

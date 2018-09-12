@@ -49,7 +49,6 @@ public class CommandAccessFilter implements Filter {
             add("showAllAuthors");
             add("showAllShelves");
             add("changeLanguage");
-            //ToDo: remove next command cause it vas used for fast testing & debugging
             add("findBooks");
         }};
 

@@ -35,16 +35,25 @@ public class BookManipulationService implements IBookManipulationService {
     @Override
     public boolean addBook(Book book, List<Integer> authorsIdList, int quantity, int shelfId) throws ServiceException {
         WrappedConnection connection = null;
+        boolean areAuthorsWritten = true;
+        boolean isBookInsertedOnShelf = true;
         try {
             connection = AbstractConnectionFactory.getConnectionFactory().getConnection();
             connection.setAutoCommit(false);
             int bookId = bookDAO.insert(connection, book);
             for (int authorId : authorsIdList) {
-                bookAuthorDAO.insert(connection, new BookAuthor(0, bookId, authorId));
+                areAuthorsWritten = areAuthorsWritten &&
+                        bookAuthorDAO.insert(connection, new BookAuthor(0, bookId, authorId)) > 0;
             }
-            shelfBookDAO.insert(connection, new ShelfBook(0, shelfId, bookId, quantity));
-            connection.commit();
-            return true;
+            isBookInsertedOnShelf =
+                    shelfBookDAO.insert(connection, new ShelfBook(0, shelfId, bookId, quantity)) > 0;
+            if (bookId > 0 && areAuthorsWritten && isBookInsertedOnShelf) {
+                connection.commit();
+                return true;
+            } else {
+                connection.rollback();
+                return false;
+            }
         } catch (SQLException | DAOException e) {
             throw new ServiceException("Can't add book to the library.", e);
         } finally {
@@ -99,13 +108,13 @@ public class BookManipulationService implements IBookManipulationService {
         WrappedConnection connection = null;
         try {
             int bookQuantity = getBookQuantity(bookId);
-            if (isBookAllreadyTakenByUser(bookId, userId) || bookQuantity <=0) {
+            if (isBookAllreadyTakenByUser(bookId, userId) || bookQuantity <= 0) {
                 throw new ServiceException("Book can't be taken by user.", new IllegalArgumentException());
             } else {
                 connection = AbstractConnectionFactory.getConnectionFactory().getConnection();
                 connection.setAutoCommit(false);
                 userBookDAO.insert(connection, new UserBook(0, userId, bookId, LocalDateTime.now()));
-                shelfBookDAO.updateQuantityByBookId(connection, bookQuantity-1, bookId);
+                shelfBookDAO.updateQuantityByBookId(connection, bookQuantity - 1, bookId);
                 connection.commit();
                 return true;
             }
@@ -124,14 +133,14 @@ public class BookManipulationService implements IBookManipulationService {
     @Override
     public boolean returnBook(int recordId) throws ServiceException {
         WrappedConnection connection = null;
-        try{
+        try {
             UserBook record = userBookDAO.findById(recordId);
             int bookQuantity = getBookQuantity(record.getBookId());
 
             connection = AbstractConnectionFactory.getConnectionFactory().getConnection();
             connection.setAutoCommit(false);
             userBookDAO.deleteByUserIdAndBookId(connection, record.getUserId(), record.getBookId());
-            shelfBookDAO.updateQuantityByBookId(connection, bookQuantity+1, record.getBookId());
+            shelfBookDAO.updateQuantityByBookId(connection, bookQuantity + 1, record.getBookId());
             connection.commit();
             return true;
         } catch (SQLException | DAOException e) {

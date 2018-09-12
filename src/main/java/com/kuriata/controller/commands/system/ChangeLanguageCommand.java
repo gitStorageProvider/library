@@ -1,9 +1,9 @@
 package com.kuriata.controller.commands.system;
 
 import com.kuriata.controller.commands.ICommand;
-import com.kuriata.exceptions.ServletException;
 import com.kuriata.helpers.MessagesProvider;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 

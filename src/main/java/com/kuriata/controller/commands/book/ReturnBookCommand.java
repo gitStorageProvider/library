@@ -3,11 +3,10 @@ package com.kuriata.controller.commands.book;
 import com.kuriata.controller.commands.ICommand;
 import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.exceptions.ServiceException;
-import com.kuriata.exceptions.ServletException;
 import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.BookManipulationService;
-import sun.plugin2.message.Message;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 public class ReturnBookCommand implements ICommand {

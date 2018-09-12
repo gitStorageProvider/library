@@ -102,10 +102,9 @@ public class AuthorService implements IAuthorService {
     @Override
     public boolean isAuthorUsed(int authorId) throws ServiceException {
         try {
-            System.out.println("AuthorService: bookAuthorDAO.getWrittenBooksCountByAuthor(authorId)=");
             return bookAuthorDAO.getWrittenBooksCountByAuthor(authorId) > 0;
         } catch (DAOException e) {
-            throw new ServiceException("Can't chekc is author used or not", e);
+            throw new ServiceException("Can't check is author used or not", e);
         }
     }
 }

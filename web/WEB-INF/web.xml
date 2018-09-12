@@ -19,7 +19,7 @@
         <servlet-name>controller</servlet-name>
         <url-pattern>/controller</url-pattern>
     </servlet-mapping>
-    
+
     <filter>
         <filter-name>commandFilter</filter-name>
         <filter-class>com.kuriata.filters.CommandAccessFilter</filter-class>
@@ -32,11 +32,18 @@
     <jsp-config>
         <jsp-property-group>
             <url-pattern>/*</url-pattern>
+            <page-encoding>UTF-8</page-encoding>
             <include-prelude>/jsp/header.jsp</include-prelude>
-        </jsp-property-group>
-        <jsp-property-group>
-            <url-pattern>/*</url-pattern>
             <include-coda>/jsp/footer.jsp</include-coda>
         </jsp-property-group>
     </jsp-config>
+
+    <!--<error-page>-->
+        <!--<error-code>404</error-code>-->
+        <!--<location>/html/errorPage.html</location>-->
+    <!--</error-page>-->
+    <!--<error-page>-->
+        <!--<error-code>500</error-code>-->
+        <!--<location>/html/errorPage.html</location>-->
+    <!--</error-page>-->
 </web-app>

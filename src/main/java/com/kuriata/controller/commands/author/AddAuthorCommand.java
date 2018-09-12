@@ -3,12 +3,12 @@ package com.kuriata.controller.commands.author;
 import com.kuriata.controller.commands.ICommand;
 import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.entities.Author;
-import com.kuriata.exceptions.ServletException;
 import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.AuthorService;
 import com.kuriata.validators.IValidator;
 import com.kuriata.validators.Validator;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 

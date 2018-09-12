@@ -3,13 +3,13 @@ package com.kuriata.controller.commands.shelf;
 import com.kuriata.controller.commands.ICommand;
 import com.kuriata.dao.daofactory.AbstractDAOFactory;
 import com.kuriata.entities.Shelf;
-import com.kuriata.exceptions.ServletException;
 import com.kuriata.helpers.MessagesProvider;
 import com.kuriata.services.impl.ShelfService;
 import com.kuriata.services.iservices.IShelfService;
 import com.kuriata.validators.IValidator;
 import com.kuriata.validators.Validator;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 public class AddShelfCommand implements ICommand {

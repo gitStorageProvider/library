@@ -51,7 +51,6 @@ public class UserService implements IUserService {
             userAuthorities = userAuthorityDAO.findAllByUserId(user.getId());
             if (!userAuthorities.isEmpty()) {
                 for (UserAuthority one : userAuthorities) {
-                    System.out.println(one);
                     //Combine all authorities from table user_authority into one authority
                     //that contain all admin and reader privileges
                     Authority temp = authorityDAO.findById(one.getAuthorityId());
@@ -101,7 +100,6 @@ public class UserService implements IUserService {
         }
     }
 
-    //ToDo: check is method body correct or not
     @Override
     public boolean isLoginAlreadyExist(String login) {
         try {
