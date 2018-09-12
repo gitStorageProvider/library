@@ -1,7 +1,5 @@
 package com.kuriata.dao.daofactory;
 
-import com.kuriata.exceptions.DAOException;
-
 public class AbstractDAOFactory {
     private static SupportedDatabases currentDatabase = SupportedDatabases.MYSQL;
 

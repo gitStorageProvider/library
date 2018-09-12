@@ -57,7 +57,7 @@ public class AddAuthorCommand implements ICommand {
     }
 
     private boolean checkFields(HttpServletRequest req) throws ServletException {
-        IValidator validator = new Validator();
+        IValidator validator =  Validator.getInstance();
         boolean isAuthorFullNameValid = true;
         boolean isAuthorDetailsValid = true;
 

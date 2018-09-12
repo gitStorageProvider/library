@@ -1,5 +1,7 @@
 package com.kuriata.filters;
 
+import com.kuriata.helpers.MessagesProvider;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -73,7 +75,7 @@ public class CommandAccessFilter implements Filter {
         if (currentCommand == null || guestPermittedCommands.contains(currentCommand)) {
             chain.doFilter(request, response);
         }
-        response.getWriter().println("You haven't been authorities to execute command=" + currentCommand + "!");
+        response.getWriter().println(MessagesProvider.getMessage("message.filter.commandRestriction")+ currentCommand +"!");
 //            ((HttpServletResponse)response).sendRedirect("/controller?command=login");
     }
 

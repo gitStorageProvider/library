@@ -26,17 +26,24 @@ public class AuthorDAO implements IAuthorDAO {
     @Override
     public List<Author> findAll() throws DAOException {
         List<Author> result = new ArrayList<>();
+        ResultSet resultSet = null;
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             Statement statement = wrappedConnection.createStatement()) {
 
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            Statement statement = wrappedConnection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_AUTHORS);
+            resultSet = statement.executeQuery(SQL_SELECT_ALL_AUTHORS);
             while (resultSet.next()) {
                 result.add(new Author(resultSet.getInt("id"),
                         resultSet.getString("full_name"),
                         resultSet.getString("details")));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't extract all users from DB.", e);
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }
@@ -44,17 +51,24 @@ public class AuthorDAO implements IAuthorDAO {
     @Override
     public Author findById(int id) throws DAOException {
         Author result = null;
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_SELECT_AUTHOR_BY_ID);
+        ResultSet resultSet = null;
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_SELECT_AUTHOR_BY_ID)) {
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 result = new Author(resultSet.getInt("id"),
                         resultSet.getString("full_name"),
                         resultSet.getString("details"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't find entity by id.", e);
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                throw new DAOException("Can't close ResultSet.", e);
+            }
         }
         return result;
     }
@@ -62,9 +76,8 @@ public class AuthorDAO implements IAuthorDAO {
     @Override
     public int insert(Author author) throws DAOException {
         int result = 0;
-
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_AUTHOR);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_INSERT_AUTHOR);) {
             preparedStatement.setString(1, author.getFullName());
             preparedStatement.setString(2, author.getDetails());
             preparedStatement.executeUpdate();
@@ -73,36 +86,34 @@ public class AuthorDAO implements IAuthorDAO {
                     result = generatedKeys.getInt(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DAOException("Can't insert entity.", e);
         }
         return result;
     }
 
     @Override
     public boolean update(Author author) throws DAOException {
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_AUTHOR);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_UPDATE_AUTHOR)) {
             preparedStatement.setString(1, author.getFullName());
             preparedStatement.setString(2, author.getDetails());
             preparedStatement.setInt(3, author.getId());
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new DAOException("Can't update entity.", e);
         }
     }
 
     @Override
     public boolean deleteById(int id) throws DAOException {
-        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();) {
-            PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_AUTHOR_BY_ID);
+        try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
+             PreparedStatement preparedStatement = wrappedConnection.prepareStatement(SQL_DELETE_AUTHOR_BY_ID)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new DAOException("Can't delete entity.", e);
         }
     }
 
@@ -110,7 +121,7 @@ public class AuthorDAO implements IAuthorDAO {
     public List<Author> findByName(String... keyWords) throws DAOException {
         List<Author> result = new ArrayList<>();
         try (final WrappedConnection wrappedConnection = AbstractConnectionFactory.getConnectionFactory().getConnection();
-            Statement statement = wrappedConnection.createStatement()) {
+             Statement statement = wrappedConnection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(generateAuthorSearchString(keyWords));
             while (resultSet.next()) {
                 result.add(new Author(resultSet.getInt("id"),

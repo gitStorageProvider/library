@@ -58,7 +58,7 @@ public class AddShelfCommand implements ICommand {
     }
 
     private boolean checkFields(HttpServletRequest req) {
-        IValidator validator = new Validator();
+        IValidator validator = Validator.getInstance();
         boolean isNameValid = true;
         boolean isAddressValid = true;
         boolean isDescriptionValid = true;

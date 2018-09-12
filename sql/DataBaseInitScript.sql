@@ -48,7 +48,7 @@ DROP TABLE IF EXISTS `library`.`shelves` ;
 CREATE TABLE IF NOT EXISTS `library`.`shelves` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(30) NOT NULL,
-  `adress` VARCHAR(30) NOT NULL,
+  `address` VARCHAR(30) NOT NULL,
   `description` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id`))
   ENGINE = InnoDB
@@ -65,8 +65,8 @@ CREATE TABLE IF NOT EXISTS `library`.`users` (
   `login` VARCHAR(30) NOT NULL,
   `password` VARCHAR(30) NOT NULL,
   `email` VARCHAR(30) NOT NULL,
-  `firstName` VARCHAR(30) NULL DEFAULT NULL,
-  `lastName` VARCHAR(30) NULL DEFAULT NULL,
+  `first_name` VARCHAR(30) NULL DEFAULT NULL,
+  `last_name` VARCHAR(30) NULL DEFAULT NULL,
   `phone` VARCHAR(15) NULL DEFAULT NULL,
   PRIMARY KEY (`id`))
   ENGINE = InnoDB
@@ -157,7 +157,7 @@ DROP TABLE IF EXISTS `library`.`authors` ;
 CREATE TABLE IF NOT EXISTS `library`.`authors` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `full_name` VARCHAR(60) NULL,
-  `details` VARCHAR(30) NULL,
+  `details` VARCHAR(200) NULL,
   PRIMARY KEY (`id`))
   ENGINE = InnoDB;
 
@@ -194,6 +194,8 @@ START TRANSACTION;
 USE `library`;
 INSERT INTO `library`.`authorities` (`id`, `authority_name`, `reader_flag`, `admin_flag`) VALUES (1, 'reader', 1, 0);
 INSERT INTO `library`.`authorities` (`id`, `authority_name`, `reader_flag`, `admin_flag`) VALUES (2, 'admin', 0, 1);
+INSERT INTO `library`.`authorities` (`id`, `authority_name`, `reader_flag`, `admin_flag`) VALUES (3, 'proffesor', 1, 1);
+INSERT INTO `library`.`authorities` (`id`, `authority_name`, `reader_flag`, `admin_flag`) VALUES (4, 'intern', 1, 0);
 
 COMMIT;
 
@@ -217,9 +219,9 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `library`;
-INSERT INTO `library`.`shelves` (`id`, `name`, `adress`, `description`) VALUES (1, 'sciences and technologies', 'A1', 'science and technology contexts');
-INSERT INTO `library`.`shelves` (`id`, `name`, `adress`, `description`) VALUES (2, 'social works', 'B1', 'social,and philosophical contexts');
-INSERT INTO `library`.`shelves` (`id`, `name`, `adress`, `description`) VALUES (3, 'historical works', 'C1', 'historical contexts');
+INSERT INTO `library`.`shelves` (`id`, `name`, `address`, `description`) VALUES (1, 'sciences and technologies', 'A1', 'science and technology contexts');
+INSERT INTO `library`.`shelves` (`id`, `name`, `address`, `description`) VALUES (2, 'social works', 'B1', 'social,and philosophical contexts');
+INSERT INTO `library`.`shelves` (`id`, `name`, `address`, `description`) VALUES (3, 'historical works', 'C1', 'historical contexts');
 
 COMMIT;
 
@@ -229,9 +231,11 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `library`;
-INSERT INTO `library`.`users` (`id`, `login`, `password`, `email`, `firstName`, `lastName`, `phone`) VALUES (1, 'root', 'root', 'root@gmail.com', 'Andrii', 'Kuriata', '+380978833743');
-INSERT INTO `library`.`users` (`id`, `login`, `password`, `email`, `firstName`, `lastName`, `phone`) VALUES (2, 'Andrii', 'birthDate', 'andrii.user@gmail.com', 'Anonimous', 'User', '+380632984112');
-INSERT INTO `library`.`users` (`id`, `login`, `password`, `email`, `firstName`, `lastName`, `phone`) VALUES (3, 'Roman', 'superPass', 'romeo@me.ua', 'Roman', 'Ivankov', '+380951122456');
+INSERT INTO `library`.`users` (`id`, `login`, `password`, `email`, `first_name`, `last_name`, `phone`) VALUES (1, 'root', 'root', 'root@gmail.com', 'Andrii', 'Kuriata', '+380978833743');
+INSERT INTO `library`.`users` (`id`, `login`, `password`, `email`, `first_name`, `last_name`, `phone`) VALUES (2, 'Andrii', 'birthDate', 'andrii.user@gmail.com', 'Anonimous', 'User', '+380632984112');
+INSERT INTO `library`.`users` (`id`, `login`, `password`, `email`, `first_name`, `last_name`, `phone`) VALUES (3, 'Roman', 'superPass', 'romeo@me.ua', 'Roman', 'Ivankov', '+380951122456');
+INSERT INTO `library`.`users` (`id`, `login`, `password`, `email`, `first_name`, `last_name`, `phone`) VALUES (4, 'professor', 'professor', 'professor@edu.epam', 'Bob', 'Langer', '+380951234567');
+INSERT INTO `library`.`users` (`id`, `login`, `password`, `email`, `first_name`, `last_name`, `phone`) VALUES (5, 'reader', 'reader', 'reader@library.life', 'John', 'Tomas', '+380937654321');
 
 COMMIT;
 
@@ -245,6 +249,8 @@ INSERT INTO `library`.`user_authority` (`id`, `user_id`, `authority_id`) VALUES 
 INSERT INTO `library`.`user_authority` (`id`, `user_id`, `authority_id`) VALUES (2, 1, 2);
 INSERT INTO `library`.`user_authority` (`id`, `user_id`, `authority_id`) VALUES (3, 2, 1);
 INSERT INTO `library`.`user_authority` (`id`, `user_id`, `authority_id`) VALUES (4, 3, 1);
+INSERT INTO `library`.`user_authority` (`id`, `user_id`, `authority_id`) VALUES (5, 4, 3);
+INSERT INTO `library`.`user_authority` (`id`, `user_id`, `authority_id`) VALUES (6, 5, 1);
 
 COMMIT;
 
@@ -254,7 +260,8 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `library`;
-INSERT INTO `library`.`user_book` (`id`, `user_id`, `book_id`, `date`) VALUES (1, 1, 5, '2008-11-11');
+INSERT INTO `library`.`user_book` (`id`, `user_id`, `book_id`, `date`) VALUES (1, 1, 5, '2018-09-11');
+INSERT INTO `library`.`user_book` (`id`, `user_id`, `book_id`, `date`) VALUES (2, 2, 1, '2018-09-12');
 
 COMMIT;
 
@@ -278,13 +285,14 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `library`;
-INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (1, 'Donald Ervin Knuth', 'USA');
-INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (2, 'Calestous Juma', 'Republic of Kenya');
-INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (3, 'Adam Grant', 'USA');
-INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (4, 'Sheryl Sandberg', 'USA');
-INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (5, 'Eric Schmidt', 'USA');
-INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (6, 'Jonathan Rosenberg', 'USA');
-INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (7, 'Ashlee Vance', 'USA');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (1, 'Donald Ervin Knuth', 'American computer scientist, mathematician, and professor emeritus at Stanford University');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (2, 'Calestous Juma', 'Known in science, technology and innovation for sustainable development');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (3, 'Adam Grant', 'American psychologist and author who is currently a professor at the Wharton School of the University of Pennsylvania specializing in organizational psychology');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (4, 'Sheryl Sandberg', 'American technology executive, activist, and author');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (5, 'Eric Schmidt', 'American businessman and software engineer');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (6, 'Jonathan Rosenberg', 'The former Senior Vice President of Products at Google and current advisor to Alphabet');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (7, 'Ashlee Vance', 'American business columnist and author');
+INSERT INTO `library`.`authors` (`id`, `full_name`, `details`) VALUES (8, 'Andrii Kuriata', 'thats me (nothing important written)');
 
 COMMIT;
 

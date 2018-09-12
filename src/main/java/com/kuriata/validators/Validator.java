@@ -25,13 +25,28 @@ public class Validator implements IValidator {
     private static final Pattern AUTHOR_FULL_NAME_PATTERN =
             Pattern.compile("^([A-ZА-ЯЄҐІЇ][\\w\\-()\\sА-яЄЯҐІЇєґії]{4,59})$");
     private static final Pattern AUTHOR_DESCRIPTION_PATTERN =
-            Pattern.compile("^([A-ZА-ЯЄҐІЇ][\\w\\-()\\sА-яЄЯҐІЇєґії]{2,29})$");
+            Pattern.compile("^([A-ZА-ЯЄҐІЇ][\\w\\-()\\sА-яЄЯҐІЇєґії]{2,199})$");
     private static final Pattern SHELF_NAME_PATTERN =
             Pattern.compile("^[\\w0-9\\\\\\/\\-\\+.,;:'\"#@!&$*\\<\\>\\[\\]()\\sА-яєґії]{3,30}$");
     private static final Pattern SHELF_ADDRESS_PATTERN =
             Pattern.compile("^[A-Z]{1,2}[0-9]{1,4}$");
     private static final Pattern SHELF_DESCRIPTION_PATTERN =
             Pattern.compile("^[\\w0-9\\\\\\/\\-\\+.,;:'\"#@!&$*\\<\\>\\[\\]()\\sА-яєґії]{2,100}$", Pattern.CASE_INSENSITIVE);
+
+    private volatile static Validator uniqueInstance;
+
+    private Validator(){}
+
+    public static Validator getInstance(){
+        if(uniqueInstance == null){
+            synchronized(Validator.class){
+                if(uniqueInstance == null){
+                    uniqueInstance = new Validator();
+                }
+            }
+        }
+        return uniqueInstance;
+    }
 
     @Override
     public boolean isUserLoginValid(String userLogin) {

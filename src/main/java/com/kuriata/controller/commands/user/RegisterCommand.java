@@ -74,7 +74,7 @@ public class RegisterCommand implements ICommand {
     }
 
     private boolean checkFields(HttpServletRequest req) throws ServletException {
-        IValidator validator = new Validator();
+        IValidator validator =  Validator.getInstance();
         boolean isLoginValid = true;
         boolean isPasswordValid = true;
         boolean isPasswordConfirmationValid = true;
